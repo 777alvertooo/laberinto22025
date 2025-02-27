@@ -6,47 +6,10 @@ class ElementoMapa:
         pass
 
 class Decorator(ElementoMapa):
-    def __init__(self, em):
+    def __init__(self, EM):
         super().__init__()
-        self.em = em
+        self.EM = EM
 
-
-class Bomba(Decorator):
-    def __init__(self, em):
-        super().__init__(em)
-        self.activa = False
-
-    def esBomba(self):
-        return True
-    
-
-class Bicho:
-    def __init__(self, vidas, poder, posicion, modo):
-        self.vidas = vidas
-        self.poder = poder
-        self.posicion = posicion
-        self.modo = modo
-
-    def iniAgresivo(self):
-        self.modo = Agresivo()
-        self.poder = 10
-        self.vidas = 5
-
-    def iniPerezoso(self):
-        self.poder = 1
-        self.vidas = 5
-
-class Modo:
-    def __init__(self):
-        pass
-
-class Agresivo(Modo):
-    def __init__(self):
-        super().__init__()
-
-class Perezoso(Modo):
-    def __init__(self):
-        super().__init__()
 
 class Habitacion(ElementoMapa):
     def __init__(self, num):
@@ -63,6 +26,7 @@ class Habitacion(ElementoMapa):
     def entrar(self):
         print(f"Entrando en la habitación {self.num}")
 
+
 class Pared(ElementoMapa):
     def __init__(self):
         super().__init__()
@@ -71,8 +35,6 @@ class Pared(ElementoMapa):
         print("Entrando en una pared")
 
     
-
-
 
 class ParedBomba(Pared):
     def __init__(self):
@@ -84,11 +46,8 @@ class ParedBomba(Pared):
 
 
 
-
-
 class Puerta(ElementoMapa):
     def __init__(self, lado1, lado2):
-        super().__init__()
         self.lado1 = lado1
         self.lado2 = lado2
         self.abierta = False
@@ -102,19 +61,73 @@ class Puerta(ElementoMapa):
     def cerrar(self):
         self.abierta = False
 
+
+
+
 class Laberinto(ElementoMapa):
     def __init__(self):
         super().__init__()
-        self.habitaciones = {}
+        self.habitaciones = []
     
     def entrar(self):
         print("Entrando en el laberinto")
 
     def agregar_habitacion(self, habitacion):
-        self.habitaciones[habitacion.num] = habitacion
+        self.habitaciones.append(habitacion)
 
     def obtener_habitacion(self, num):
-        return self.habitaciones.get(num)
+        for habitacion in self.habitaciones:
+            if habitacion.num == num:
+                return habitacion
+        return None
+
+
+
+class Bomba(Decorator):
+    def __init__(self, EM):
+        super().__init__(EM)
+        self.activa = False
+
+    def es_bomba(self):
+        return True
+    
+
+class Bicho:
+    def __init__(self, vidas, poder, posicion, modo):
+        self.vidas = vidas
+        self.poder = poder
+        self.posicion = posicion
+        self.modo = modo
+
+    def inizializar_Agresivo(self):
+        self.modo = Agresivo()
+        self.poder = 10
+        self.vidas = 5
+
+    def inizializar_Perezoso(self):
+        self.poder = 1
+        self.vidas = 5
+
+
+
+class Modo:
+    def __init__(self):
+        pass
+
+
+
+class Agresivo(Modo):
+    def __init__(self):
+        super().__init__()
+
+
+
+
+class Perezoso(Modo):
+    def __init__(self):
+        super().__init__()
+
+
 
  
 
@@ -122,16 +135,16 @@ class Laberinto(ElementoMapa):
 class Juego:
     def __init__(self):
         self.laberinto = Laberinto()
-        self.bicho = []
+        self.bichos = []
 
     def agregar_bicho(self, bicho):
         self.bichos.append(bicho)
 
     def iniciar_juego(self):
-        # Lógica para iniciar el juego
+        # Aqui va la lógica para iniciar el juego
         pass
 
-    def crearLaberinto2HabFM(self, creator):
+    def crear_laberinto_2_hab_FM(self, creator):
         laberinto = creator.crear_laberinto()
         habitacion1 = creator.crear_habitacion(1)
         habitacion2 = creator.crear_habitacion(2)
@@ -143,7 +156,7 @@ class Juego:
         return laberinto
     
 
-    def crearLaberinto2HabBomba(self, creator):
+    def crear_laberinto_2_hab_bomba(self, creator):
         laberinto = creator.crear_laberinto()
         habitacion1 = creator.crear_habitacion(1)
         habitacion2 = creator.crear_habitacion(2)
@@ -164,11 +177,13 @@ class Juego:
         laberinto.agregar_habitacion(habitacion2)
         return laberinto
 
-    def obtenerHabitacion(self, num):
-        return self.laberinto.obtenerHabitacion(num)
+
+
+    def obtener_habitacion(self, num):
+        return self.laberinto.obtener_habitacion(num)
     
 
-    def crearLaberinto4Hab(self, creator):
+    def crear_laberinto_4_hab(self, creator):
         laberinto = creator.crear_laberinto()
 
         hab1 = creator.crear_habitacion(1)

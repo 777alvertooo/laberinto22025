@@ -14,9 +14,6 @@ class Creator:
 
     def crear_pared(self):
         return Pared()
-
-    def crear_puerta(self, lado1, lado2):
-        return Puerta(lado1, lado2)
     
     def crear_puerta(self, lado1, lado2):
         return Puerta(lado1, lado2)
