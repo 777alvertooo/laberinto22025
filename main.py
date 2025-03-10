@@ -1,5 +1,5 @@
 from creator import Creator, CreatorB
-from juegoLaberinto import Juego
+from juego import Juego
 
 
 FM = Creator()
@@ -26,7 +26,7 @@ juego.laberinto = juego.crear_laberinto_4_hab(FM)
 
 
 # Mostrar el número de cada habitación
-for habitacion in juego.laberinto.habitaciones:
+for habitacion in juego.laberinto.hijos:
     print(f"Habitación {habitacion.num}")
     if hasattr(habitacion, 'bicho'):
         bicho = habitacion.bicho
@@ -36,7 +36,7 @@ for habitacion in juego.laberinto.habitaciones:
 
 
 from creator import Creator, CreatorB
-from juegoLaberinto import Juego, Bomba
+from juego import Juego, Bomba
 
 
 #ejemplo de uso
@@ -74,7 +74,7 @@ for habitacion in juego.laberinto.habitaciones:
 
 
 from creator import Creator, CreatorB
-from juegoLaberinto import Juego, Bomba
+from juego import Juego, Bomba
 
 
 #ejemplo de uso
@@ -110,7 +110,7 @@ for habitacion in juego.laberinto.habitaciones:
 
 
 from creator import Creator, CreatorB
-from juegoLaberinto import Juego, Bomba
+from juego import Juego, Bomba
 
 
 
@@ -154,7 +154,7 @@ for habitacion in juego.laberinto.habitaciones:
 
 
 from creator import Creator, CreatorB
-from juegoLaberinto import Juego, Bomba
+from juego import Juego, Bomba
 
 
 #ejemplo de uso
@@ -196,7 +196,7 @@ for habitacion in juego.laberinto.habitaciones:
 
 
 from creator import Creator, CreatorB
-from juegoLaberinto import Juego, Bomba
+from juego import Juego, Bomba
 
 
 
@@ -241,3 +241,19 @@ hab2 = juego2.obtener_habitacion(2)
 print("\nLaberinto de 2 habitaciones con bombas:")
 print(f"Habitación 1 tiene bomba al este: {hasattr(hab1, 'este') and hasattr(hab1.este, 'esBomba') and hab1.este.esBomba()}")
 print(f"Habitación 2 tiene bomba al oeste: {hasattr(hab2, 'oeste') and hasattr(hab2.oeste, 'esBomba') and hab2.oeste.esBomba()}")
+
+
+# Mostrar el número de cada habitación
+for habitacion in juego.laberinto.hijos:
+    print(f"Habitación {habitacion.num}")
+    if hasattr(habitacion, 'bicho'):
+        bicho = habitacion.bicho
+
+# Ejemplo de uso de recorrer con print
+print("\nRecorriendo el laberinto e imprimiendo:")
+juego.laberinto.recorrer(print)
+
+def abrirPuertas(obj):
+    if obj.esPuerta():
+        obj.abrir()
+juego.laberinto.recorrer(abrirPuertas)
