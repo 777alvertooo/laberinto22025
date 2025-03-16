@@ -1,3 +1,4 @@
+import time
 from modo import Modo
 
 class Agresivo(Modo):

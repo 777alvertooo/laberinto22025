@@ -1,4 +1,5 @@
 from modo import Modo
+import time
 
 class Perezoso(Modo):
     def __init__(self):
@@ -6,6 +7,7 @@ class Perezoso(Modo):
 
     def dormir(self, bicho):
         print("Perezoso: Zzzzz...")
+        time.sleep(3)
 
     def caminar(self, bicho):
         print("Perezoso: Caminando sin ganas...")

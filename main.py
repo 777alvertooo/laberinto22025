@@ -1,5 +1,6 @@
 from creator import Creator, CreatorB
 from juego import Juego
+import time
 
 
 FM = Creator()
@@ -15,8 +16,8 @@ FMb = CreatorB()
 juego.laberinto = juego.crear_laberinto_2_hab_FM(FMb)
 hab1=juego.obtener_habitacion(1)
 hab2=juego.obtener_habitacion(2)
-print(hab1.norte.activa)
-print(hab2.sur.activa)
+print(hab1.este.activa)
+print(hab2.oeste.activa)
 
 
 # Crear laberinto de 4 habitaciones
@@ -28,10 +29,23 @@ juego.laberinto = juego.crear_laberinto_4_hab(FM)
 # Mostrar el número de cada habitación
 for habitacion in juego.laberinto.hijos:
     print(f"Habitación {habitacion.num}")
-    if hasattr(habitacion, 'bicho'):
-        bicho = habitacion.bicho
 
 
+# Ejemplo de uso de recorrer con print
+print("\nRecorriendo el laberinto e imprimiendo:")
+juego.laberinto.recorrer(print)
+
+#def abrirPuertas(obj):
+#    if obj.esPuerta():
+#        obj.abrir()
+juego.abrir_puertas()
+
+juego.cerrar_puertas()
+
+bicho=juego.bichos[0]
+juego.lanzarBicho(bicho)
+time.sleep(3)
+bicho.vidas=0
 
 
 
