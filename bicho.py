@@ -4,11 +4,12 @@ from ente import Ente
 
 class Bicho:
     def __init__(self, vidas, poder, posicion, modo):
-        self.vidas = vidas
-        self.poder = poder
-        self.posicion = posicion
+        #super().__init__(vidas, poder, posicion)
         self.modo = modo
         self.running = True
+        self.poder = poder
+        self.vidas = vidas
+        self.posicion = posicion
 
     def actua(self):
         while self.estaVivo():
@@ -27,4 +28,4 @@ class Bicho:
         return self.vidas > 0
 
     def __str__(self):
-        return "Soy un bicho"
+        return "Soy un bicho"+self.modo.__str__()

@@ -28,3 +28,5 @@ class Contenedor(ElementoMapa):
             hijo.recorrer(func)
         for orientacion in self.orientaciones:
             orientacion.recorrer(func, self)
+
+

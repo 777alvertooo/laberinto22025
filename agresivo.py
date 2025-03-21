@@ -7,6 +7,7 @@ class Agresivo(Modo):
 
     def dormir(self, bicho):
         print("Agresivo: Durmiendo un poco...")
+        time.sleep(1)
 
     def caminar(self, bicho):
         print("Agresivo: Caminando con determinación...")
@@ -15,4 +16,4 @@ class Agresivo(Modo):
         print("Agresivo: ¡Atacando con furia!")
 
     def __str__(self):
-        return "Soy un modo agresivo"
+        return " agresivo"
