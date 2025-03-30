@@ -1,8 +1,12 @@
 from orientacion import Orientacion
 
 class Norte(Orientacion):
-    def __init__(self):
-        super().__init__()
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
     def poner(self, elemento, contenedor):
         contenedor.norte = elemento
@@ -13,4 +17,6 @@ class Norte(Orientacion):
 
     def __str__(self):
         return "Soy la orientacion norte"
-    
+
+    def obtenerElemento(self, forma):
+        return forma.norte

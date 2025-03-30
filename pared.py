@@ -5,7 +5,7 @@ class Pared(ElementoMapa):
         super().__init__()
 
     def entrar(self,alguien):
-        print("Chocando en una pared")
+        print("chocando en una pared")
 
     def __str__(self):
         return "Soy una pared"

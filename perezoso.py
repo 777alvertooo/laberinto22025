@@ -1,5 +1,5 @@
-from modo import Modo
 import time
+from modo import Modo
 
 class Perezoso(Modo):
     def __init__(self):
@@ -16,4 +16,4 @@ class Perezoso(Modo):
         print("Perezoso: Intentando atacar...")
 
     def __str__(self):
-        return " perezoso"
+        return "-perezoso"

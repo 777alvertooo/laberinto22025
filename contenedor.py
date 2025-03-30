@@ -5,6 +5,7 @@ class Contenedor(ElementoMapa):
         super().__init__()
         self.hijos = []
         self.orientaciones = []
+        self.forma = None
 
     def agregar_hijo(self, hijo):
         hijo.padre = self
@@ -13,14 +14,14 @@ class Contenedor(ElementoMapa):
     def eliminar_hijo(self, hijo):
         self.hijos.remove(hijo)
 
-    def agregar_orientacion(self, orientacion):
-        self.orientaciones.append(orientacion)
+    def agregarOrientacion(self, orientacion):
+        self.forma.agregarOrientacion(orientacion)
 
-    def eliminar_orientacion(self, orientacion):
-        self.orientaciones.remove(orientacion)
+    def eliminarOrientacion(self, orientacion):
+        self.forma.eliminarOrientacion(orientacion)
 
     def ponerElementoEnOrientacion(self, elemento, orientacion):
-        orientacion.poner(elemento, self)
+        self.forma.ponerElementoEnOrientacion(elemento, orientacion)
 
     def recorrer(self, func):
         func(self)
@@ -28,5 +29,8 @@ class Contenedor(ElementoMapa):
             hijo.recorrer(func)
         for orientacion in self.orientaciones:
             orientacion.recorrer(func, self)
+
+    def obtenerElementoEnOrientacion(self, orientacion):
+        return self.forma.obtenerElementoEnOrientacion(orientacion)
 
 
