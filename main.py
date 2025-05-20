@@ -1,3 +1,4 @@
+'''
 from creator import Creator, CreatorB
 from juego import Juego
 import time
@@ -271,3 +272,33 @@ def abrirPuertas(obj):
     if obj.esPuerta():
         obj.abrir()
 juego.laberinto.recorrer(abrirPuertas)
+'''
+
+from creator import Creator
+from juego import Juego
+import time
+
+# Crear juego y laberinto
+juego = Juego()
+fm = Creator()
+juego.laberinto = juego.crear_laberinto_4_hab(fm)
+
+# Agregar personaje
+juego.agregar_personaje("Pepe")
+
+# Mostrar habitación inicial del personaje
+print(f"Personaje está en la habitación: {juego.personaje.posicion.num}")
+
+# Mostrar bichos
+for bicho in juego.bichos:
+    print(f"Bicho en {bicho.posicion.num}")
+
+# Lanzar bichos (comienzan a actuar)
+juego.abrir_puertas()
+juego.lanzarBichos()
+
+# Esperar para ver si alguno lo alcanza
+time.sleep(10)
+
+# Terminar bichos por si siguen vivos
+juego.terminarBichos()

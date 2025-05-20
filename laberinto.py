@@ -25,3 +25,6 @@ class Laberinto(Contenedor):
         func(self)
         for hijo in self.hijos:
             hijo.recorrer(func)
+    
+    def visitarContenedor(self, unVisitor):
+        unVisitor.visitarLaberinto(self)

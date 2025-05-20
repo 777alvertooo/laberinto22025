@@ -34,5 +34,9 @@ class Forma:
         return random.choice(self.orientaciones)
 
     def aceptar(self, unVisitor):
+
         for orientacion in self.orientaciones:
-            orientacion.aceptar(unVisitor, self)
+            try:
+                orientacion.aceptar(unVisitor, self)
+            except AttributeError:
+                print(f"Orientación {orientacion} no tiene elemento asignado.")

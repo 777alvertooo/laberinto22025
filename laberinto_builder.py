@@ -27,6 +27,7 @@ class LaberintoBuilder:
 
     def fabricarLaberinto(self):
         self.laberinto = Laberinto()
+        self.laberinto.forma = self.fabricarForma()
 
     def fabricarHabitacion(self, num):
         hab=Habitacion(num)	

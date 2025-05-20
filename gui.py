@@ -44,6 +44,10 @@ class MazeGUI:
 
     def visitarHabitacion(self, hab):
         self.dibujarRectangulo(hab.forma)
+    
+    def visitarLaberinto(self, laberinto):
+        print("Visitando el laberinto")
+
 
     def visitarPared(self, pared):
         pass
@@ -116,5 +120,5 @@ class MazeGUI:
 
 if __name__ == '__main__':
     root = tk.Tk()
-    gui = MazeGUI(root, "./laberintos/lab4HabIzd4Bichos.json")  # Use a default laberinto file
+    gui = MazeGUI(root, "./laberintos/lab4Hab3.json")  # Use a default laberinto file
     root.mainloop()
