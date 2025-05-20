@@ -1,5 +1,5 @@
 import tkinter as tk
-from director import Director
+from LaberintoBuilder.director import Director
 from point import Point
 
 class MazeGUI:

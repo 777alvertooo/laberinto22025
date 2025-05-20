@@ -1,8 +1,8 @@
-from director import Director
-from laberinto_builder import LaberintoBuilder
-from laberinto import Laberinto
-from habitacion import Habitacion
-from puerta import Puerta
+from LaberintoBuilder.director import Director
+from LaberintoBuilder.laberinto_builder import LaberintoBuilder
+from ElementoMapa.Contenedor.laberinto import Laberinto
+from ElementoMapa.Contenedor.habitacion import Habitacion
+from ElementoMapa.puerta import Puerta
 import time
 
 director = Director()

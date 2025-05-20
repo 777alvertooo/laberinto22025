@@ -275,7 +275,7 @@ juego.laberinto.recorrer(abrirPuertas)
 '''
 
 from creator import Creator
-from juego import Juego
+from Juego.juego import Juego
 import time
 
 # Crear juego y laberinto
