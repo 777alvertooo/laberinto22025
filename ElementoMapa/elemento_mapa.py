@@ -29,6 +29,12 @@ class ElementoMapa:
     
     def esTunel(self):
         return False
+    
+    def esBaul(self):
+        return False
+    
+    def esFuego(self):
+        return False
 
     def calcularPosicionDesde(self,forma):
         pass

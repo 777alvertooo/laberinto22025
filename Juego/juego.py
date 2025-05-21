@@ -7,6 +7,7 @@ from Orientaciones.este import Este
 from Orientaciones.oeste import Oeste
 from Orientaciones.sur import Sur
 from ElementoMapa.Hoja.Decorator.bomba import Bomba
+from ElementoMapa.Hoja.Decorator.Fuego import Fuego
 from Ente.bicho import Bicho
 from Modo.agresivo import Agresivo
 from Modo.perezoso import Perezoso
@@ -166,7 +167,7 @@ class Juego:
         bicho.posicion = posicion
         bicho.modo = self.fabricarModoAgresivo()
 
-        bicho.corazones = 10
+        bicho.vidas = 10
         bicho.poder = 3
 
         return bicho
@@ -177,21 +178,12 @@ class Juego:
         bicho.posicion = posicion
         bicho.modo = self.fabricarModoPerezoso()
 
-        bicho.corazones = 10
+        bicho.vidas = 10
         bicho.poder = 1
 
         return bicho
     
-    def fabricarBichoCurativo(self,posicion):
-        bicho = self.fabricarBicho()
-
-        bicho.posicion = posicion
-        bicho.modo = self.fabricarModoCurativo()
-
-        bicho.corazones = 10
-        bicho.poder = 1
-
-        return bicho
+    
     
     def fabricarPuerta(self):
         return Puerta()
@@ -229,6 +221,8 @@ class Juego:
     def fabricarBomba(self):
         return Bomba()
     
+    def fabricarFuego(self):
+        return Fuego()
     
     
     def esJuego(self):

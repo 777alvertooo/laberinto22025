@@ -1,4 +1,6 @@
 from LaberintoBuilder.laberinto_builder import LaberintoBuilder
+from LaberintoBuilder.LaberintoBuiderRombo import LaberintoBuilderRombo
+from LaberintoBuilder.LaberintoBuilderHexagono import LaberintoBuilderHexagono
 import json
 
 class Director:
@@ -28,6 +30,12 @@ class Director:
         if self.diccionario['forma'] == "cuadrado":
             self.form = "Cuadrado"
             self.builder = LaberintoBuilder()
+        if self.diccionario['forma'] == "rombo":
+            self.form = "Rombo"
+            self.builder = LaberintoBuilderRombo()
+        if self.diccionario['forma'] == "hexagono":
+            self.form = "Hexagono"
+            self.builder = LaberintoBuilderHexagono()
         
 
     def makeMaze(self):
@@ -44,6 +52,9 @@ class Director:
             padre = self.builder.fabricarHabitacion(dic['num'])
         if dic['tipo'] == 'armario':
             padre = self.builder.fabricarArmarioEn(parent, dic['num'])
+
+        if dic['tipo'] == 'baul':
+            padre = self.builder.fabricarBaulEn(parent, dic['num'])
         
         if dic['tipo'] == 'bomba':
             padre = self.builder.fabricarBombaEn(parent, dic['num'])
@@ -52,12 +63,6 @@ class Director:
         if dic['tipo'] == 'tunel':
             padre = self.builder.fabricarTunelEn(parent)
 
-        if dic['tipo'] == 'pan':
-            padre = self.builder.fabricarPanEn(parent, dic['num'])
-        if dic['tipo'] == 'pocion':
-            padre = self.builder.fabricarPocionEn(parent, dic['num'])
-        if dic['tipo'] == 'batepinchos':
-            padre = self.builder.fabricarBatePinchosEn(parent, dic['num'])
         
         #Hijos
         hijos = dic.get('hijos',[])

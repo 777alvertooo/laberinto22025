@@ -1,14 +1,17 @@
 from Comandos.abrir import Abrir
 from Comandos.coger import Coger
 from ElementoMapa.Contenedor.armario import Armario
+from ElementoMapa.Contenedor.baul import Baul
 from ElementoMapa.Contenedor.habitacion import Habitacion
 from ElementoMapa.Contenedor.laberinto import Laberinto
 from ElementoMapa.Hoja.Decorator.bomba import Bomba
+from ElementoMapa.Hoja.Decorator.Fuego import Fuego
 from ElementoMapa.Hoja.tunel import Tunel
 from ElementoMapa.pared import Pared
 from ElementoMapa.puerta import Puerta
+from Forma.cuadrado import Cuadrado
 from Ente.bicho import Bicho
-from Juego.Juego import Juego
+from Juego.juego import Juego
 from Modo.agresivo import Agresivo
 from Modo.perezoso import Perezoso
 from Orientaciones.este import Este
@@ -48,10 +51,14 @@ class LaberintoBuilder:
         return Bicho()
     
     
-
+    def fabricarForma(self):
+        return Cuadrado()
     
     def fabricarArmario(self, id):
         return Armario(id)
+    
+    def fabricarBaul(self, id):
+        return Baul(id)
     
     def fabricarTunel(self):
         return Tunel()
@@ -90,25 +97,44 @@ class LaberintoBuilder:
 
         obj.addChild(armario)
         return armario
+    
+    def fabricarBaulEn(self, obj, num):
+        baul = self.fabricarBaul(num)
+
+        p1 = self.fabricarPuerta()
+        cmd = Abrir()
+        cmd.receiver = p1
+        p1.addCommand(cmd)
+
+        p1.lado1 = baul
+        p1.lado2 = obj
+
+        baul.form = self.fabricarForma()
+        baul.addOr(self.fabricarNorte())
+        baul.addOr(self.fabricarEste())
+        baul.addOr(self.fabricarOeste())
+        baul.addOr(self.fabricarSur())
+
+        baul.putElementOn(self.fabricarNorte(), self.fabricarPared())
+        baul.putElementOn(self.fabricarEste(), self.fabricarPared())
+        baul.putElementOn(self.fabricarOeste(), self.fabricarPared())
+        baul.putElementOn(self.fabricarSur(), p1)
+
+        obj.addChild(baul)
+
+        return baul
 
     def fabricarBombaEn(self,padre,num):
         bomba = self.fabricarBomba()
         bomba.num = num
         padre.addChild(bomba)
-
+    
     def fabricarFuegoEn(self,padre,num):
         fuego = self.fabricarFuego()
         fuego.num = num
         padre.addChild(fuego)
+
     
-    def fabricarBatePinchosEn(self,padre,num):
-        arma = self.fabricarBatePinchos()
-        arma.ref = num
-        padre.addChild(arma)
-        cmd = Coger()
-        arma.addCommand(cmd)
-        
-        return arma
     
     def fabricarBichoAgresivo(self, posicion):
         bicho = self.fabricarBicho()
@@ -130,15 +156,7 @@ class LaberintoBuilder:
 
         return bicho
     
-    def fabricarBichoCurativo(self, posicion):
-        bicho = self.fabricarBicho()
-        bicho.posicion = posicion
-        bicho.modo = self.fabricarModoCurativo()
-
-        bicho.corazones = 50
-        bicho.poder = 15
-
-        return bicho
+    
 
     def fabricarBichoAlternativo(self, modo, posicion):
         hab = self.juego.getHab(posicion)
@@ -147,8 +165,7 @@ class LaberintoBuilder:
             bicho = self.fabricarBichoAgresivo(hab)
         if modo == "perezoso":
             bicho = self.fabricarBichoPerezoso(hab)
-        if modo == "curativo":
-            bicho = self.fabricarBichoCurativo(hab)
+        
         
         if bicho is not None:
             self.juego.agregarBicho(bicho)
@@ -203,11 +220,6 @@ class LaberintoBuilder:
         l1.putElementOn(ori1x, door)
         l2.putElementOn(ori2x, door)
 
-    def fabricarPanEn(self, obj, ref):
-        obj.addChild(self.fabricarPan(ref))
-    
-    def fabricarPocionEn(self, obj, ref):
-        obj.addChild(self.fabricarPocion(ref))
 
     def fabricarPared(self):
         return Pared()
@@ -226,5 +238,8 @@ class LaberintoBuilder:
     
     def fabricarBomba(self):
         return Bomba()
+    
+    def fabricarFuego(self):
+        return Fuego()
     
     

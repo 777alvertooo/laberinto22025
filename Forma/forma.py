@@ -43,3 +43,10 @@ class Forma:
 
     def esCuadrado(self):
         return False
+
+    def esRombo(self):
+        return False
+    
+    def esHexagono(self):
+        return False
+
