@@ -57,19 +57,16 @@ class Juego:
 
     def ganar_juego(self):
         mensaje_victoria = (
-            "\n...y así, el último mecanismo cede, la gran puerta se abre, no hacia un nuevo pasaje, sino hacia la comprensión.\n"
-            "Miras hacia atrás, al laberinto de pasillos, pruebas y ecos de tus propios pasos.\n"
-            "¿Fue el laberinto una prisión física, o un reflejo de los muros internos que construimos?\n"
-            "Cada llave encontrada, cada código descifrado... meros símbolos de una búsqueda más profunda.\n"
-            "Quizás, solo quizás, la única salida era entender que nunca estuviste verdaderamente atrapado,\n"
-            "sino aprendiendo a ver más allá de las paredes que tú mismo habías aceptado.\n"
-            "Ahora, con la mente clara y el espíritu sereno, avanzas. El 'exterior' no es un lugar, sino una nueva perspectiva.\n\n"
+            "\n...Has conseguido derrotar a todos los enemigo que te metieron en el laberinto.\n"
+            "Por fin puedes acabar con esta pesadilla y salir de la mazmorra.\n"
+            "¡Felicidades! ¡Has logrado tu objetivo!\n"
+            "Ya puedes volver con tu familia?\n\n"
             "FIN"
         )
         self.terminar_juego(mensaje_victoria)
 
     def perder_juego(self):
-        self.terminar_juego("La oscuridad te envuelve... Has sido derrotado, pero cada final es un nuevo comienzo para la reflexión.")
+        self.terminar_juego("Te ha derrotado un enemgo, desgraciadamente no vas a poder volver a ver a tu familia.")
 
     def mostrar_descripcion_habitacion_actual(self):
         if not self.personaje or not self.personaje.posicion:
@@ -85,11 +82,12 @@ class Juego:
         print(f"Estás en: {nombre_hab}")
         print(desc_hab)
         
-        items_visibles = [hijo for hijo in getattr(hab_actual, 'hijos', []) if isinstance(hijo, Hoja)]
-        if items_visibles:
+            # Mostrar cualquier objeto que esté en self.hijos (Armario, Baúl, Arma, etc.)
+        todos_visibles = getattr(hab_actual, 'hijos', [])
+        if todos_visibles:
             print("Ves aquí:")
-            for item_obj in items_visibles:
-                print(f"  - {item_obj.nombre}")
+            for obj in todos_visibles:
+                print(f"  - {getattr(obj, 'nombre', str(obj))}")
         else:
             print("No ves ningún objeto de interés inmediato.")
 

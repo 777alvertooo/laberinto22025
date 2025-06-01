@@ -275,20 +275,39 @@ class LaberintoBuilder:
 
     def fabricarHoja(self, nombre_item: str, tipo_item_str: str, **props_item_dict):
         from ElementoMapa.Hoja.Arma import Arma
-        item_obj = None; tipo_item_lower = tipo_item_str.lower().strip()
 
-        if tipo_item_lower == "arma" and Arma: 
-            item_obj = Arma(nombre=nombre_item, poder_adicional=props_item_dict.get("poder_adicional", 1))
+        item_obj = None
+        tipo_item_lower = tipo_item_str.lower().strip()
+
+        # 1) Si es “Armario”, instanciamos tu clase Armario
+        if tipo_item_lower == "armario":
+            from ElementoMapa.Contenedor.Armario import Armario
+            item_obj = Armario(nombre_item)
+
+        # 2) Si es “Baul” o “Baúl”, instanciamos tu clase Baul
+        elif tipo_item_lower in ("baul", "baúl"):
+            from ElementoMapa.Contenedor.Baul import Baul
+            item_obj = Baul(nombre_item)
+
+        # 3) Si es “Arma”, usamos la clase Arma
+        elif tipo_item_lower == "arma" and Arma:
+            item_obj = Arma(nombre=nombre_item,
+                            poder_adicional=props_item_dict.get("poder_adicional", 1))
+
+        # 4) Si es “HojaGenérica”, creamos Hoja
         elif tipo_item_lower == "hojagenerica":
-            item_obj = Hoja(nombre=nombre_item) 
-            if "descripcion" in props_item_dict: setattr(item_obj, 'descripcion', props_item_dict["descripcion"])
-        else:
-            print(f"BUILDER WARN: Tipo de ítem '{tipo_item_str}' desconocido o su clase no pudo ser importada para '{nombre_item}'. Creando Hoja genérica.")
-            item_obj = Hoja(nombre=nombre_item) 
-        
-        
+            item_obj = Hoja(nombre=nombre_item)
+            if "descripcion" in props_item_dict:
+                setattr(item_obj, "descripcion", props_item_dict["descripcion"])
 
-        if item_obj: print(f"BUILDER: Fabricado ítem '{nombre_item}' de tipo '{tipo_item_str}'.")
+        # 5) Si no coincide con nada de lo anterior, Hoja genérica
+        else:
+            print(f"BUILDER WARN: Tipo de ítem '{tipo_item_str}' desconocido. Creando Hoja genérica para '{nombre_item}'.")
+            item_obj = Hoja(nombre=nombre_item)
+
+        if item_obj:
+            print(f"BUILDER: Fabricado ítem '{nombre_item}' de tipo '{tipo_item_str}'.")
         return item_obj
+
 
     

@@ -106,36 +106,54 @@ class Director:
             print("DIRECTOR ERROR: 'laberinto.habitaciones' no se encontró o no es una lista en el JSON.")
 
     def _fabricarHabitacionConItems(self, habitacion_data_json: dict):
-        if not self.builder: return
+        if not self.builder:
+            return
 
         num_habitacion = habitacion_data_json.get('num')
         id_habitacion_str = habitacion_data_json.get('id')
         nombre_habitacion = habitacion_data_json.get('nombre', f"Sala N.{num_habitacion}")
         desc_habitacion = habitacion_data_json.get('descripcion', "Un lugar enigmático.")
-        forma_habitacion_str = habitacion_data_json.get('forma', "cuadrado") 
+        forma_habitacion_str = habitacion_data_json.get('forma', "cuadrado")
 
         hab_creada_obj = None
         if num_habitacion is not None:
             hab_creada_obj = self.builder.fabricarHabitacion(
-                num_habitacion, 
+                num_habitacion,
                 id_str=id_habitacion_str,
                 nombre=nombre_habitacion,
                 descripcion=desc_habitacion,
                 forma_str=forma_habitacion_str
             )
-            
+
             if hab_creada_obj and 'itemsEnHabitacion' in habitacion_data_json and \
-               isinstance(habitacion_data_json['itemsEnHabitacion'], list):
-                # print(f"DIRECTOR: Procesando ítems para Habitación {num_habitacion}...")
+            isinstance(habitacion_data_json['itemsEnHabitacion'], list):
+
                 for item_json in habitacion_data_json['itemsEnHabitacion']:
                     nombre = item_json.get('nombre')
                     tipo = item_json.get('tipo')
                     props = {k: v for k, v in item_json.items() if k not in ['nombre', 'tipo']}
-                    
+
                     if nombre and tipo:
                         item_obj = self.builder.fabricarHoja(nombre, tipo, **props)
                         if item_obj and hasattr(hab_creada_obj, 'agregar_hijo'):
-                            hab_creada_obj.agregar_hijo(item_obj) 
+                            hab_creada_obj.agregar_hijo(item_obj)
+
+                            # ── Procesar hijos del contenedor (itemsEnContenedor) ──
+                            for hijo_json in item_json.get('itemsEnContenedor', []):
+                                nombre_hijo = hijo_json.get('nombre')
+                                tipo_hijo = hijo_json.get('tipo')
+                                props_hijo = {k: v for k, v in hijo_json.items() if k not in ['nombre', 'tipo']}
+
+                                if nombre_hijo and tipo_hijo:
+                                    hijo_obj = self.builder.fabricarHoja(nombre_hijo, tipo_hijo, **props_hijo)
+                                    if hijo_obj and hasattr(item_obj, 'agregar_hijo'):
+                                        item_obj.agregar_hijo(hijo_obj)
+                                    else:
+                                        print(f"DIRECTOR WARN: No se pudo agregar el hijo '{nombre_hijo}' dentro de '{nombre}'.")
+                                else:
+                                    print(f"DIRECTOR WARN: Hijo en JSON para contenedor '{nombre}' sin nombre o tipo: {hijo_json}")
+                            # ────────────────────────────────────────────────────────
+
                         elif not item_obj:
                             print(f"DIRECTOR WARN: Builder no pudo fabricar el item '{nombre}' ({tipo}) para hab {num_habitacion}.")
                         else:

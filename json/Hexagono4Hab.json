@@ -51,7 +51,7 @@
     "puertasGlobales": [
       [1, "Noroeste", 2, "Suroeste", "PuertaNormal", {"nombre": "Puerta de Madera"}],
       [2, "Norte", 3, "Sur", "PuertaNormal", {"nombre": "Puerta de Madera"}],
-      [3, "Norte", 4, "Sur", "PuertaNormal", {"nombre": "Puerta de Madera"}]
+      [3, "Noroeste", 4, "Sureste", "PuertaNormal", {"nombre": "Puerta de Madera"}]
     ],
     "bichos": [
       {

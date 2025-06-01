@@ -58,7 +58,7 @@
       {
         "nombre": "Espectro Oscuro",
         "modo": "Agresivo",
-        "posicion": 2,
+        "posicion": 3,
         "vidas": 30,
         "poder": 7,
         "drops": [
