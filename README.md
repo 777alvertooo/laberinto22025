@@ -22,8 +22,5 @@ Hemos añadido un serie de modificaciones a la version original que hemos implem
 ## **Diagrama de clases**
 ![Diagrama de clases](imagenes/DiagramaClases.jpg)
 
-## **Factory Method**
-Este patrón encapsula la creación de objetos, permitiendo que cada tipo de laberinto pueda ser instanciado sin modificar 
-la lógica principal del juego. A continuacion, se muestra el diagrama de clases:
-![Diagrama Factory Method](imagenes/Final.jpg)
+
 
