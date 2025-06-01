@@ -9,7 +9,7 @@ from Comandos.Soltar import Soltar
 from Comandos.Atacar import Atacar
 from Comandos.Ayuda import Ayuda
 from Comandos.Revisar import Revisar
-from Comandos.Saquear import Saquear
+
 
 
 class ProcesadorComandos:
@@ -55,7 +55,6 @@ class ProcesadorComandos:
         self.registrar_comando("luchar", Atacar()) 
 
         self.registrar_comando('revisar', Revisar())
-        self.registrar_comando('saquear', Saquear())
 
         
         print(f"DEBUG: Comandos registrados: {list(self.comandos_disponibles.keys())}") 

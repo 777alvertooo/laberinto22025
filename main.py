@@ -64,7 +64,7 @@ def bucle_de_juego_interactivo(juego_actual: Juego):
 
 if __name__ == "__main__":
   
-    ruta_json_personalizada = "C:\\Users\\alber\\Desktop\\UNIVERSIDAD\\TERCERO\\SEGUNDO CUATRI\\DISEÑO SOFTWARE\\Repositorio\\laberinto22025\\json\\Cuadrado4Hab.json"
+    ruta_json_personalizada = "C:\\Users\\alber\\Desktop\\UNIVERSIDAD\\TERCERO\\SEGUNDO CUATRI\\DISEÑO SOFTWARE\\Repositorio\\laberinto22025\\json\\Octogono4Hab.json"
     
     print(f"MAIN: Iniciando el juego con el builder y el archivo: {ruta_json_personalizada}")
     mi_juego_instancia = inicializar_juego_real(ruta_json_personalizada)

@@ -3,7 +3,6 @@ from ElementoMapa.Hoja.Hoja import Hoja
 from Modos.Agresivo import Agresivo
 from Ente.Bicho import Bicho
 from Ente.Fantasma import Fantasma
-from ElementoMapa.Hoja.Decorator.BombaNuclear import BombaNuclear
 from ElementoMapa.Hoja.Decorator.Bomba import Bomba
 from ElementoMapa.Hoja.Decorator.Fuego import Fuego
 from Formas.Cuadrado import Cuadrado
