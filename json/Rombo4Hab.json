@@ -5,8 +5,8 @@
   },
   "personajePrincipal": {
     "nombre": "Alberto",
-    "vidas":20,
-    "poder": 5,
+    "vidas":7,
+    "poder": 3,
     "inventario": {
       "capacidad": 5,
       "itemsIniciales": [
