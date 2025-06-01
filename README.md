@@ -20,7 +20,7 @@ Hemos añadido un serie de modificaciones a la version original que hemos implem
   a traves de la clase ProcesadorComandos.
 
 ## **Diagrama de clases**
-![Diagrama de clases](imagenes/DiagramaClases.jpg)
+![Diagrama de clases](imagenes/Final.jpg)
 
 
 
