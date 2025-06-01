@@ -25,7 +25,13 @@
         "id": "Principal", "num": 1, "nombre": "Sala Principal",
         "descripcion": "Te acaban de atrapar en el laberinto de los enemigos. Estas en la sala principal",
         "forma": "hexagono",
-        "itemsEnHabitacion": []
+        "itemsEnHabitacion": [{
+            "tipo": "Armario",
+            "nombre": "Armario Vintage",
+            "itemsEnContenedor": [
+              { "tipo": "Fuego", "nombre": "Asquas", "daño": 3 }
+            ]
+          }]
       },
       {
         "id": "Camara de tortura", "num": 2, "nombre": "Sala de la Camara de Tortura",
@@ -45,7 +51,13 @@
         "id": "Sala Derrumbada", "num": 4, "nombre": "Sala Derrumbada",
         "descripcion": "Te encuentras con la sala mas antigua del laberinto. Te encuentras con unas inscripciones antiguas... y una sombra flotando.",
         "forma": "hexagono",
-        "itemsEnHabitacion": []
+        "itemsEnHabitacion": [{
+            "tipo": "Baul",
+            "nombre": "Baul Grande",
+            "itemsEnContenedor": [
+              { "tipo": "Bomba", "nombre": "Petardo Valenciano", "daño": 4 }
+            ]
+          }]
       }
     ],
     "puertasGlobales": [

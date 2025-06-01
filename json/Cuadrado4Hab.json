@@ -47,7 +47,7 @@
         "forma": "cuadrada",
         "itemsEnHabitacion": [{
             "tipo": "Baul",
-            "nombre": "Baúl Viejo",
+            "nombre": "Baul Viejo",
             "itemsEnContenedor": [
               { "tipo": "Fuego", "nombre": "Fuego Latente", "daño": 3 }
             ]

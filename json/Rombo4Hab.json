@@ -5,7 +5,7 @@
   },
   "personajePrincipal": {
     "nombre": "Alberto",
-    "vidas": 7,
+    "vidas":20,
     "poder": 5,
     "inventario": {
       "capacidad": 5,
@@ -39,7 +39,13 @@
         "id": "Cámara de Vigilancia", "num": 3, "nombre": "Sala de la Camara de Tortura",
         "descripcion": "Sientes una mirada que te observa desde una camara de vigilancia.",
         "forma": "rombo",
-        "itemsEnHabitacion": []
+        "itemsEnHabitacion": [{
+            "tipo": "Baul",
+            "nombre": "Baul Antiguo",
+            "itemsEnContenedor": [
+              { "tipo": "Bomba", "nombre": "Bomba de Cristal", "daño": 7 }
+            ]
+          }]
       },
       {
         "id": "Sala Derrumbada", "num": 4, "nombre": "Sala Derrumbada",

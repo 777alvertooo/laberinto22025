@@ -25,7 +25,11 @@
         "id": "Principal", "num": 1, "nombre": "Sala Principal",
         "descripcion": "Te acaban de atrapar en el laberinto de los enemigos. Estas en la sala principal",
         "forma": "octogono",
-        "itemsEnHabitacion": []
+        "itemsEnHabitacion": [{
+            "tipo": "Baul",
+            "nombre": "Baul Grande",
+            "itemsEnContenedor": []
+          }]
       },
       {
         "id": "Camara de tortura", "num": 2, "nombre": "Sala de la Camara de Tortura",
