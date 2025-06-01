@@ -1,55 +1,55 @@
-from ElementoMapa.elemento_mapa import ElementoMapa
-from Estado.EstadoPuerta.estado_puerta import Cerrada
+
+from Estados.Cerrada import Cerrada
+from ElementoMapa.ElementoMapa import ElementoMapa
 
 class Puerta(ElementoMapa):
-    def __init__(self):
-        self.lado1 = None
-        self.lado2 = None
-        self.visitada = False
-        self.estadoPuerta = Cerrada()
+    def __init__(self, lado1, lado2): 
+        super().__init__() 
+        self.abierta = False
+        self.lado1 = lado1
+        self.lado2 = lado2
 
-    def entrar(self,ente):
-        if self.estaAbierta():
-            if ente.posicion == self.lado1:
-                self.lado2.entrar(ente)
+    def entrar(self, alguien): 
+        # print(f"Puerta.entrar: {alguien.nombre} intenta entrar. Puerta abierta: {self.abierta}")
+        if self.abierta:
+            if alguien.posicion == self.lado1:
+                print(f"Puerta '{getattr(self, 'nombre', 'Puerta')}' abierta, {alguien.nombre} va de {self.lado1} a {self.lado2}")
+                self.lado2.entrar(alguien) 
+                return True 
+            elif alguien.posicion == self.lado2:
+                print(f"Puerta '{getattr(self, 'nombre', 'Puerta')}' abierta, {alguien.nombre} va de {self.lado2} a {self.lado1}")
+                self.lado1.entrar(alguien) 
+                return True 
             else:
-                self.lado1.entrar(ente)
+                print(f"Error: {alguien.nombre} no está en un lado válido ({self.lado1} o {self.lado2}) de la puerta '{getattr(self, 'nombre', 'Puerta')}'. Posición actual: {alguien.posicion}")
+                return False
         else:
-            print(str(ente)," se chocó con una puerta.")
-
-    def puedeEntrar(self, alguien):
-        print("Entrando en una puerta")
-        if alguien.posicion == self.lado1:
-            self.lado2.entrar(alguien)
-        else:
-            self.lado1.entrar(alguien)
+            print(f"La puerta '{getattr(self, 'nombre', 'Puerta')}' está cerrada.")
+            return False 
 
     def abrir(self):
-        print("Abriendo puerta")
-        self.estadoPuerta.abrir(self)
+        if not self.abierta:
+            print(f"Abriendo puerta '{getattr(self, 'nombre', 'Puerta')}'")
+            self.abierta = True
+        else:
+            print(f"La puerta '{getattr(self, 'nombre', 'Puerta')}' ya estaba abierta.")
+        return self.abierta
+
 
     def cerrar(self):
-        print("Cerrando puerta")
-        self.estadoPuerta.cerrar(self)
-
-    def esPuerta(self):
-        return True
-    
-    def aceptar(self,visitor):
-        print("Visitando una puerta")
-        visitor.visitarPuerta(self)
-
-    def calcularPosicionDesdeEn(self,forma, punto):
-        print("punto: ", punto.x, punto.y)
-        if self.visitada:
-            return
-        self.visitada = True
-        if self.lado1.num == forma.num:
-            self.lado2.forma.punto=punto
-            self.lado2.calcularPosicion()
+        if self.abierta:
+            print(f"Cerrando puerta '{getattr(self, 'nombre', 'Puerta')}'")
+            self.abierta = False
         else:
-            self.lado1.forma.punto=punto
-            self.lado1.calcularPosicion()
-    
-    def __str__(self):
-        return "Soy una puerta"
+            print(f"La puerta '{getattr(self, 'nombre', 'Puerta')}' ya estaba cerrada.")
+        return not self.abierta
+
+
+    def esPuerta(self): 
+        return True
+
+    def __str__(self): 
+        estado = "Abierta" if self.abierta else "Cerrada"
+        return f"{getattr(self, 'nombre', 'puerta')} ({estado})"
+
+

@@ -1,75 +1,84 @@
-from Ente.ente import Ente
-from Estado.muerto import Muerto
-from Modo.agresivo import Agresivo
-import random
-import sys
-sys.setrecursionlimit(150000)
+from Modos.Perezoso import Perezoso 
+from Modos.Agresivo import Agresivo 
+from Ente.Ente import Ente
+from Ente.Personaje import Personaje
+from Estados.Vivo import Vivo 
+from typing import List, Optional
+from ElementoMapa.Hoja.Hoja import Hoja
 
 class Bicho(Ente):
-
-    def __init__(self):
-        super().__init__()
-        self.modo = None
-        self.numero_identificador = None
-
-
-    def set_posicion(self, pos):
-        self.posicion = pos
-        for observador in self.obsPosition:
-            observador.visualBicho(self)
-
-    def set_vidas(self, vidas):
-        self.vidas = vidas
-        print("Vidas de ", str(self), ":", str(self.vidas))
-        for observador in self.obsVidas:
-            observador.vidasBicho(self)
-
-    def buscarEnemigo(self):
-        return self.juego.visualBicho(self)
-
-    def actuar(self):
-        while self.estaVivo():
-            self.estado.actua(self)
-
-    def obtener_orientacion_aleatoria(self):
-        return self.posicion.getRandOri()
-    
-    def puedeActuar(self):
-        self.modo.actua(self)
-
-    def ente_muere(self):
-        self.muerto()
-
-    def muerto(self):
-        self.estado = Muerto()
-        self.muere()
-        self.juego.muere_bicho()
-
-    def muere(self):
-        print(str(self), " ha muerto.")
-        self.corazones = 0
-        self.estado = Muerto()
-
-    def cambiar(self):
-        entity = self.juego.buscar_bicho(self)
-        if entity is not None:
-            numero_aleatorio = random.randint(1, 10)
-
-            if numero_aleatorio > 9:
-                self.modo = Agresivo()
-            
-                for observador in self.obsPosition:
-                    observador.visualBicho(self)
-
-    def es_bicho(self):
-        return True
-    
-    def __str__(self):
-        return "Bicho" + " id: " + str(self.numero_identificador) + " " + str(self.modo)
-    
-    def __repr__(self):
-        return "Bicho" + str(self.modo) + str(self.numero_identificador)
-
-    def esAtacadoPor(self, unEnte):
-        self.estado.enteEsAtacadoPor(self, unEnte)
+    def __init__(self, vidas: int, poder: int, posicion, modo, 
+                 nombre: str = "Bicho Anónimo", 
+                 drop_items: Optional[List['Hoja']] = None): 
+        super().__init__() 
+        self.nombre: str = nombre
+        self.vidas_maximas: int = vidas 
+        self.vidas: int = vidas
+        self.poder: int = poder
+        self.posicion = posicion 
+        self.modo = modo
+        self.juego = None 
         
+
+        if not self.estadoEnte: 
+            self.estadoEnte = Vivo()
+
+        self.drop_items_objs: List['Hoja'] = drop_items if drop_items is not None else []
+
+        print(f"BICHO CREADO: {self.nombre} (V:{self.vidas}, P:{self.poder}, Modo:{self.modo}) en Hab: {getattr(self.posicion, 'num', '?')}")
+
+    def estaVivo(self) -> bool:
+        return self.vidas > 0
+
+    def recibir_daño(self, cantidad: int):
+        if not self.estaVivo():
+            return
+
+        self.vidas -= cantidad
+        vidas_mostradas = max(0, self.vidas)
+        print(f"¡El {self.nombre} recibe {cantidad} puntos de daño! Vidas restantes: {vidas_mostradas}.")
+        
+        if self.vidas <= 0:
+            self.morir()
+
+    def morir(self):
+        if isinstance(self.estadoEnte, Vivo): 
+            print(f"¡El {self.nombre} ha sido derrotado!")
+            self.estadoEnte.morir(self) 
+            self._soltar_drops()
+            self._eliminar_del_juego()
+
+    def _soltar_drops(self):
+        if self.posicion and self.drop_items_objs:
+            if hasattr(self.posicion, 'agregar_hijo'):
+                print(f"El {self.nombre} ha soltado algo:")
+                for item_obj in self.drop_items_objs:
+                    self.posicion.agregar_hijo(item_obj)
+                    print(f"  - {item_obj.nombre} aparece en el suelo.")
+            else:
+                print(f"BICHO WARN: La habitación {getattr(self.posicion, 'num', '?')} no puede recibir drops (no tiene 'agregar_hijo').")
+
+    def _eliminar_del_juego(self):
+        if self.juego and hasattr(self.juego, 'bichos') and self in self.juego.bichos:
+            self.juego.bichos.remove(self)
+            #print(f"BICHO INFO: {self.nombre} eliminado de la lista de bichos del juego.")
+        
+    def actua(self): 
+        if self.estaVivo() and self.modo and hasattr(self.modo, 'actuar'):
+            self.modo.actuar(self)
+        elif not self.estaVivo():
+            pass 
+          
+
+    def intentar_contraataque(self, personaje_objetivo: 'Personaje'):
+        if self.estaVivo() and self.modo and hasattr(self.modo, 'atacar'):
+            #print(f"DEBUG BICHO: {self.nombre} intentando contraataque...")
+            self.modo.atacar(self, personaje_objetivo)
+        elif not self.estaVivo():
+            pass 
+                
+
+
+    def __str__(self):
+        estado_vida = "Vivo" if self.estaVivo() else "Derrotado"
+        return f"{self.nombre} [{getattr(self.modo, '__str__', lambda: 'Sin Modo')()}] (Vidas: {self.vidas}/{self.vidas_maximas}, Estado: {estado_vida})"

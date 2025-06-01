@@ -1,47 +1,23 @@
-from ElementoMapa.Hoja.Decorator.decorator import Decorator
-from Comandos.entrar import Entrar
+from ElementoMapa.Hoja.Decorator.Decorator import Decorator
 
 class Bomba(Decorator):
+    
+    def __init__(self, em):
+        super().__init__(em)
+        self.activa = False
 
-    def __init__(self):
-        super().__init__()
-        self.num = None
-        self.activa = True
-        self.damage = 20
-        self.obsActiva = []
-        c = Entrar()
-        c.receiver = self
-        self.commands.append(c)
 
     def esBomba(self):
         return True
-    
-    def agregarObservadoresActiva(self, obs):
-        self.obsActiva.append(obs)
 
-    def aceptar(self, visitor):
-        print("Visitar bomba")
-        visitor.visitarBomba(self)
-    
-    def entrar(self, e):
-        if self.activa:
-            print("¡Te has metido en la bomba!")
-            print("¡Explotaste!")
-            if e.esPersonaje() and e.defensa > 0:
-                defensa_efectiva = min(e.defensa, self.damage)
-                dano_recibido = self.damage - defensa_efectiva
-                e.defensa -= defensa_efectiva
-            else:
-                dano_recibido = self.damage
 
-            e.setVidas(e.Vidas - dano_recibido)
-            self.activa = False
-            
-            for co in self.commands:
-                if co.esEntrar():
-                    self.commands.remove(co)
-            for obs in self.obsActiva:
-                obs.visualBomba(self)
-        else:
-            if self.componente is not None:
-                self.componente.entrar(e)
+    def __str__(self):
+        return f"Bomba {self.activa}"
+    
+
+    def activar(self):
+        self.activa = True
+        print("Bomba activada")
+
+    def esBombaNuclear(self):
+        return False

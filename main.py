@@ -1,304 +1,76 @@
-'''
-from creator import Creator, CreatorB
-from juego import Juego
-import time
-
-
-FM = Creator()
-juego = Juego()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(FM)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.num)
-print(hab2.num)
-
-#laberinto con paredes bomba
-FMb = CreatorB()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(FMb)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.este.activa)
-print(hab2.oeste.activa)
-
-
-# Crear laberinto de 4 habitaciones
-FM = Creator()
-juego.laberinto = juego.crear_laberinto_4_hab(FM)
-
-
-
-# Mostrar el número de cada habitación
-for habitacion in juego.laberinto.hijos:
-    print(f"Habitación {habitacion.num}")
-
-
-# Ejemplo de uso de recorrer con print
-print("\nRecorriendo el laberinto e imprimiendo:")
-juego.laberinto.recorrer(print)
-
-#def abrirPuertas(obj):
-#    if obj.esPuerta():
-#        obj.abrir()
-juego.abrir_puertas()
-
-juego.cerrar_puertas()
-
-bicho=juego.bichos[0]
-juego.lanzarBicho(bicho)
-time.sleep(3)
-bicho.vidas=0
-
-
-
-from creator import Creator, CreatorB
-from juego import Juego, Bomba
-
-
-#ejemplo de uso
-FM = Creator()
-juego = Juego()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(FM)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.num)
-print(hab2.num)
-
-
-
-
-#laberinto con paredes bomba
-FMb = CreatorB()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(FMb)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.norte.activa)
-print(hab2.sur.activa)
-
-# Crear laberinto de 4 habitaciones
-FM = Creator()
-juego.laberinto = juego.crear_laberinto_4_hab(FM)
-
-# Mostrar el número de cada habitación
-for habitacion in juego.laberinto.habitaciones:
-    print(f"Habitación {habitacion.num}")
-    if hasattr(habitacion, 'bicho'):
-        bicho = habitacion.bicho
-
-
-
-
-
-from creator import Creator, CreatorB
-from juego import Juego, Bomba
-
-
-#ejemplo de uso
-FM = Creator()
-juego = Juego()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(FM)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.num)
-print(hab2.num)
-
-
-
-
-#laberinto con paredes bomba
-FMb = CreatorB()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(FMb)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.norte.activa)
-print(hab2.sur.activa)
-
-# Crear laberinto de 4 habitaciones
-FM = Creator()
-juego.laberinto = juego.crear_laberinto_4_hab(FM)
-
-# Mostrar el número de cada habitación
-for habitacion in juego.laberinto.habitaciones:
-    print(f"Habitación {habitacion.num}")
-    if hasattr(habitacion, 'bicho'):
-        bicho = habitacion.bicho
-
-
-
-from creator import Creator, CreatorB
-from juego import Juego, Bomba
-
-
-
-
-#ejemplo de uso
-fm = Creator()
-juego = Juego()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(fm)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.num)
-print(hab2.num)
-
-
-
-
-#laberinto con paredes bomba
-FMb = CreatorB()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(FMb)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.norte.activa)
-print(hab2.sur.activa)
-
-
-
-
-# Crear laberinto de 4 habitaciones
-FM = Creator()
-juego.laberinto = juego.crear_laberinto_4_hab(FM)
-
-# Mostrar el número de cada habitación
-for habitacion in juego.laberinto.habitaciones:
-    print(f"Habitación {habitacion.num}")
-    if hasattr(habitacion, 'bicho'):
-        bicho = habitacion.bicho
-
-
-
-
-
-
-from creator import Creator, CreatorB
-from juego import Juego, Bomba
-
-
-#ejemplo de uso
-fm = Creator()
-juego = Juego()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(fm)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.num)
-print(hab2.num)
-
-#laberinto con paredes bomba
-FMb = CreatorB()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(FMb)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.norte.activa)
-print(hab2.sur.activa)
-
-
-
-
-# Crear laberinto de 4 habitaciones
-FM = Creator()
-juego.laberinto = juego.crear_laberinto_4_hab(FM)
-
-# Mostrar el número de cada habitación
-for habitacion in juego.laberinto.habitaciones:
-    print(f"Habitación {habitacion.num}")
-    if hasattr(habitacion, 'bicho'):
-        bicho = habitacion.bicho
-
-
-
-
-
-
-
-
-
-from creator import Creator, CreatorB
-from juego import Juego, Bomba
-
-
-
-#ejemplo de uso
-FM = Creator()
-juego = Juego()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(FM)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.num)
-print(hab2.num)
-
-#laberinto con paredes bomba
-FMb = CreatorB()
-juego.laberinto = juego.crear_laberinto_2_hab_FM(FMb)
-hab1=juego.obtener_habitacion(1)
-hab2=juego.obtener_habitacion(2)
-print(hab1.norte.activa)
-print(hab2.sur.activa)
-
-
-
-
-# Crear laberinto de 4 habitaciones
-FM = Creator()
-juego.laberinto = juego.crear_laberinto_4_hab(FM)
-
-# Mostrar el número de cada habitación
-for habitacion in juego.laberinto.habitaciones:
-    print(f"Habitación {habitacion.num}")
-    if hasattr(habitacion, 'bicho'):
-        bicho = habitacion.bicho
-        print(f"  Bicho: Vidas={bicho.vidas}, Poder={bicho.poder}, Posicion={bicho.posicion.num}")
-
-# Crear laberinto de 2 habitaciones con bombas (Habitación 1 al este, Habitación 2 al oeste)
-FM = Creator()
-juego2 = Juego()
-juego2.laberinto = juego2.crear_laberinto_2_hab_bomba(FM)
-hab1 = juego2.obtener_habitacion(1)
-hab2 = juego2.obtener_habitacion(2)
-
-print("\nLaberinto de 2 habitaciones con bombas:")
-print(f"Habitación 1 tiene bomba al este: {hasattr(hab1, 'este') and hasattr(hab1.este, 'esBomba') and hab1.este.esBomba()}")
-print(f"Habitación 2 tiene bomba al oeste: {hasattr(hab2, 'oeste') and hasattr(hab2.oeste, 'esBomba') and hab2.oeste.esBomba()}")
-
-
-# Mostrar el número de cada habitación
-for habitacion in juego.laberinto.hijos:
-    print(f"Habitación {habitacion.num}")
-    if hasattr(habitacion, 'bicho'):
-        bicho = habitacion.bicho
-
-# Ejemplo de uso de recorrer con print
-print("\nRecorriendo el laberinto e imprimiendo:")
-juego.laberinto.recorrer(print)
-
-def abrirPuertas(obj):
-    if obj.esPuerta():
-        obj.abrir()
-juego.laberinto.recorrer(abrirPuertas)
-'''
-
-from creator import Creator
-from Juego.juego import Juego
-import time
-
-# Crear juego y laberinto
-juego = Juego()
-fm = Creator()
-juego.laberinto = juego.crear_laberinto_4_hab(fm)
-
-# Agregar personaje
-juego.agregar_personaje("Pepe")
-
-# Mostrar habitación inicial del personaje
-print(f"Personaje está en la habitación: {juego.personaje.posicion.num}")
-
-# Mostrar bichos
-for bicho in juego.bichos:
-    print(f"Bicho en {bicho.posicion.num}")
-
-# Lanzar bichos (comienzan a actuar)
-juego.abrir_puertas()
-juego.lanzarBichos()
-
-# Esperar para ver si alguno lo alcanza
-time.sleep(10)
-
-# Terminar bichos por si siguen vivos
-juego.terminarBichos()
+from Builder.Director import Director
+from Juego.Juego import Juego 
+from typing import Optional 
+
+def inicializar_juego_real(ruta_json: str) -> Optional[Juego]:
+
+    print(f"MAIN: Creando instancia de Director...")
+    director_juego = Director() 
+    
+    print(f"MAIN: Director procesando archivo JSON: {ruta_json}")
+    
+    juego_configurado = director_juego.procesar(ruta_json) 
+
+    if not juego_configurado:
+        print("ERROR CRÍTICO MAIN: El Director no pudo construir la instancia de Juego.")
+        return None
+    
+    if not isinstance(juego_configurado, Juego):
+        print(f"ERROR CRÍTICO MAIN: El Director no devolvió un objeto Juego válido (obtenido: {type(juego_configurado)}).")
+        return None
+    
+    if not juego_configurado.personaje:
+        print("ERROR CRÍTICO MAIN: Personaje no fue creado o asignado por el builder al objeto Juego.")
+        return None 
+        
+    if not juego_configurado.personaje.posicion:
+        print("ERROR CRÍTICO MAIN: Personaje no tiene una posición inicial asignada por el builder.")
+        return None
+
+    print("MAIN: Juego construido y configurado exitosamente por el sistema Builder-Director.")
+    return juego_configurado
+
+
+def bucle_de_juego_interactivo(juego_actual: Juego):
+    if not juego_actual:
+        print("MAIN ERROR: Se intentó iniciar el bucle con un juego no válido.")
+        return
+
+    print("\n" + juego_actual.configuracionGlobal.get("mensajeBienvenida", "¡Comienza la aventura interactiva!"))
+    juego_actual.mostrar_descripcion_habitacion_actual()
+
+    while not juego_actual.esta_terminado():
+        entrada = input("> ").strip()
+        if not entrada:
+            continue 
+        
+        if entrada.lower() == "salir":
+            juego_actual.terminar_juego("Has decidido salir del juego. ¡Hasta pronto!")
+           
+        else:
+            resultado_procesamiento = juego_actual.procesador_comandos.procesar(entrada)
+            if resultado_procesamiento: 
+                print(resultado_procesamiento)
+        
+        
+        if juego_actual.personaje and hasattr(juego_actual.personaje, 'vidas') and \
+           juego_actual.personaje.vidas <= 0 and not juego_actual.esta_terminado():
+            juego_actual.perder_juego()
+
+    
+    print("\n" + juego_actual.mensaje_final)
+    print("Gracias por jugar.")
+
+
+if __name__ == "__main__":
+  
+    ruta_json_personalizada = "C:\\Users\\alber\\Desktop\\UNIVERSIDAD\\TERCERO\\SEGUNDO CUATRI\\DISEÑO SOFTWARE\\Repositorio\\laberinto22025\\json\\Cuadrado4Hab.json"
+    
+    print(f"MAIN: Iniciando el juego con el builder y el archivo: {ruta_json_personalizada}")
+    mi_juego_instancia = inicializar_juego_real(ruta_json_personalizada)
+
+    if mi_juego_instancia:
+        print("MAIN: Juego inicializado por el builder. Iniciando bucle interactivo.")
+        bucle_de_juego_interactivo(mi_juego_instancia)
+    else:
+        print("MAIN: No se pudo iniciar el juego. Revisa los errores anteriores.")

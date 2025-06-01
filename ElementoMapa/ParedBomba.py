@@ -1,0 +1,13 @@
+
+from .Pared import Pared
+
+class ParedBomba(Pared):
+    def __init__(self):
+        super().__init__()
+        self.activa = False
+
+    def entrar(self):
+        print("Entrando en una pared bomba")
+
+    def __str__(self):
+        return "pared bomba"

@@ -1,39 +1,16 @@
-from Orientaciones.orientacion import Orientacion
+
+from .Orientacion import Orientacion
 
 class Suroeste(Orientacion):
-    __instance = None
-
     def __init__(self):
-        if Suroeste.__instance is None:
-            Suroeste.__instance = self
-    
-    def obtenerInstancia(self):
-        if Suroeste.__instance is None:
-            Suroeste.__instance = Suroeste()
-        
-        return Suroeste.__instance
-    
-    def getElement(self,cont):
-        return cont.suroeste
-    
-    def verPosicion(self,forma):
-        unPunto = (forma.punto[0]-1,forma.punto[1]+1)
-        forma.suroeste.calcularPosicionDesde(forma,unPunto)
-    
-    def aceptar(self,visitor,forma):
-        print("We wuz kangz.")
-        forma.suroeste.aceptar(visitor)
-    
-    def putElementOn(self,em,cont):
-        cont.suroeste = em
-    
-    def moverA(self,ente):
-        cont = ente.posicion.form
-        cont.suroeste.entrar(ente)
+        super().__init__()
 
-    def getCommands(self,forma,ente):
-        return forma.suroeste.obtenerComandos(ente)
+    def poner(self, elemento, unContenedor):
+        unContenedor.suroeste = elemento
 
-    def recorrerEn(self,cont,func):
-        cont.suroeste.recorrer(func)
+    def recorrer(self, func, unContenedor):
+        if unContenedor.suroeste is not None:
+            func(unContenedor.suroeste)
 
+    def __str__(self):
+        return "Suroeste"

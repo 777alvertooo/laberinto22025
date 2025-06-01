@@ -1,122 +1,110 @@
-from Orientaciones.oeste import Oeste
-from Orientaciones.norte import Norte
-from Orientaciones.este import Este
-from Orientaciones.sur import Sur
-from Orientaciones.noreste import Noreste
-from Orientaciones.noroeste import Noroeste
-from Orientaciones.sureste import Sureste
-from Orientaciones.suroeste import Suroeste
-from Estado.vivo import Vivo
-import sys
-sys.setrecursionlimit(150000)
-from abc import ABC, abstractmethod
+from typing import Optional
+from ElementoMapa.Hoja.Hoja import Hoja 
+#from inventario import Inventario
+from Estados.EstadoEnte import EstadoEnte
+from Estados.Vivo import Vivo
+from Estados.Muerto import Muerto
+from ElementoMapa.Contenedor.Habitacion import Habitacion
 
-class Ente(ABC):
+
+
+
+class Ente:
     def __init__(self):
-        self.vidas = 100
-        self.defensa = 20
-        self.poder = 10
-        self.estado = Vivo()
-        self.posicion = None
-        self.juego = None
-        self.obsPosition = []
-        self.obsVidas = []
+        self.nombre: str = "Ente Anónimo"
+        self.vidas: Optional[int] = None
+        self.vidas_maximas: Optional[int] = None 
+        self.poder: Optional[int] = None
+        self.posicion: Optional['Habitacion'] = None 
+        self.juego: Optional["Juego"] = None         
+        self.estadoEnte: Optional[EstadoEnte] = None 
 
-    def subscribePosicion(self, obs):
-        self.obsPosition.append(obs)
+    def estaVivo(self) -> bool:
+        if self.vidas is None or self.estadoEnte is None:
+            return False 
+        return self.vidas > 0 and isinstance(self.estadoEnte, Vivo)
 
-    def subscribeVida(self, obs):
-        self.obsVidas.append(obs)
-
-    def setPosicion(self, pos):
-        self.posicion = pos
-    
-    def setVidas(self, vidas):
-        self.vidas = vidas
-        print(str(self), "|Vidas:", str(self.vidas) + "|")
-
-    def atacar(self):
-        unEnte = self.buscarEnemigo()
-        if unEnte is not None:
-            unEnte.esAtacadoPor(self)
-    
-    def esAtacadoPor(self, unEnte):
-        self.estado.enteEsAtacadoPor(self, unEnte)
-
-    def puedeSerAtacadoPor(self, unEnte):
-        print("¿Puede ser atacado?")
-        self.recalcularVidas(unEnte)
-        if self.verificarEstado():
-            self.muere()
-
-    def recalcularVidas(self, ente):
-        if ente.esPersonaje():
-            arma = ente.obtenerBatePinchos()
+    def morir(self):
+        if self.estadoEnte and isinstance(self.estadoEnte, Vivo): 
+            print(f"¡{self.nombre} ha sido derrotado!")
+            self.estadoEnte.morir(self) 
+            if isinstance(self.estadoEnte, Muerto) and hasattr(self, 'juego') and self.juego:
+                if not self.juego.esta_terminado(): 
+                    self.juego.perder_juego()
+        elif isinstance(self.estadoEnte, Muerto):
+            # print(f"{self.nombre} ya estaba derrotado.")
+            pass
         else:
-            arma = None
+            print(f"WARN: {self.nombre} intentó morir pero su estado es desconocido o ya no es Vivo.")
 
-        if self.esPersonaje() and self.defensa > 0:
-            defensa_efectiva = min(self.defensa, ente.poder)
-            dano_recibido = ente.poder + (arma.poder if arma else 0) - defensa_efectiva
-            self.defensa -= defensa_efectiva
-        else:
-            dano_recibido = ente.poder + (arma.poder if arma else 0)
 
-        calc = self.corazones - dano_recibido
-        if calc > self.corazones:
-            self.setCorazones(self.corazones)
-        else:
-            self.setCorazones(calc)
-        if self.corazones < 0:
-            self.setCorazones(0)
-    
-    def verificarEstado(self):
-        if self.vidas == 0:
-            return True
-        else:
-            return False
+class Personaje(Ente):
+    def __init__(self, nombre: str, vidas: int, poder: int, juego, capacidad_inventario: int = 5):
+        super().__init__()
+        self.nombre = nombre
+        self.vidas_maximas = vidas  
+        self.vidas = vidas         
+        self.poder = poder
+        self.juego = juego          
+        #self.inventario = Inventario(capacidad_inventario)
+        self.estadoEnte = Vivo()    
+
+    def __str__(self) -> str:
+        salud_actual_str = f"{self.vidas}"
+        if self.vidas_maximas is not None:
+            salud_actual_str += f"/{self.vidas_maximas}"
         
-    @abstractmethod
-    def buscarEnemigo(self):
-        pass
+        estado_str = ""
+        if self.estadoEnte and hasattr(self.estadoEnte, '__class__'): 
+            estado_str = f"(Estado: {self.estadoEnte.__class__.__name__})"
 
-    def estaVivo(self):
-        return self.estado.estaVivo()
-    
-    def irA(self, unaOr):
-        unaOr.moverA(self)
+        return (f"--- {self.nombre} {estado_str} ---\n"
+                f"  Salud: {salud_actual_str}\n"
+                f"  Poder: {self.poder}\n"
+                f"  {self.inventario.listar_items()}") 
 
-    def irAlNorte(self):
-        self.irA(Norte.obtenerInstancia(self))
+    def recibir_daño(self, cantidad: int):
+        if not self.estaVivo():
+            # print(f"{self.nombre} ya está derrotado, no puede recibir más daño.") 
+            return
 
-    def irAlEste(self):
-        self.irA(Este.obtenerInstancia(self))
+        self.vidas -= cantidad
+        
+        vidas_mostradas = max(0, self.vidas) 
+        
+        print(f"¡{self.nombre} recibe {cantidad} puntos de daño! Vidas restantes: {vidas_mostradas}.")
+        
+        if self.vidas <= 0:
+            self.vidas = 0 
+            super().morir() 
 
-    def irAlOeste(self):
-        self.irA(Oeste.obtenerInstancia(self))
 
-    def irAlSur(self):
-        self.irA(Sur.obtenerInstancia(self))
+    def recoger_hoja(self, hoja_a_recoger: Hoja, habitacion_actual):
+        if not hasattr(habitacion_actual, 'hijos'):
+            print(f"Error: {getattr(habitacion_actual, 'nombre', 'Esta habitación')} no parece contener objetos (sin 'hijos').")
+            return False
 
-    def irAlNoreste(self):
-        self.irA(Noreste.obtenerInstancia(self))
+        item_encontrado_en_hijos = False
+        for hijo in habitacion_actual.hijos: 
+            if hijo == hoja_a_recoger: 
+                item_encontrado_en_hijos = True
+                break
+        
+        if item_encontrado_en_hijos: 
+            if self.inventario.agregar_item(hoja_a_recoger):
+                if hasattr(habitacion_actual, 'eliminar_hijo'):
+                    habitacion_actual.eliminar_hijo(hoja_a_recoger) 
+                    print(f"{self.nombre} recogió: {hoja_a_recoger.nombre}.")
+                    return True
+                else:
+                    self.inventario.quitar_item_por_nombre(hoja_a_recoger.nombre)
+                    print(f"Error interno: No se pudo quitar {hoja_a_recoger.nombre} de la habitación.")
+                    return False
+            else:
+                return False
+        else:
+            print(f"'{hoja_a_recoger.nombre}' no se encuentra en {getattr(habitacion_actual, 'nombre', 'esta habitación')}.")
+            return False
 
-    def irAlNoroeste(self):
-        self.irA(Noroeste.obtenerInstancia(self))
-
-    def irAlSureste(self):
-        self.irA(Sureste.obtenerInstancia(self))
-
-    def irAlSuroeste(self):
-        self.irA(Suroeste.obtenerInstancia(self))
-
-    def esPersonaje(self):
-        return False
-    
-    def esBicho(self):
-        return False
-    
-    @abstractmethod
-    def muere(self):
-        pass
-
+    def mostrar_inventario(self):
+        print(self.inventario.listar_items())

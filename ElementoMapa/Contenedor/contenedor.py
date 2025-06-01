@@ -1,10 +1,11 @@
-from ElementoMapa.elemento_mapa import ElementoMapa
+from ElementoMapa.ElementoMapa import ElementoMapa
 
 class Contenedor(ElementoMapa):
+
     def __init__(self):
         super().__init__()
         self.hijos = []
-        self.forma = None
+        self.orientaciones = []
 
     def agregar_hijo(self, hijo):
         hijo.padre = self
@@ -13,31 +14,28 @@ class Contenedor(ElementoMapa):
     def eliminar_hijo(self, hijo):
         self.hijos.remove(hijo)
 
-    def agregarOrientacion(self, orientacion):
-        self.forma.agregarOrientacion(orientacion)
+    def agregar_orientacion(self, orientacion):
+        self.orientaciones.append(orientacion)
 
-    def eliminarOrientacion(self, orientacion):
-        self.forma.eliminarOrientacion(orientacion)
+    def eliminar_orientacion(self, orientacion):
+        self.orientaciones.remove(orientacion)
 
     def ponerElementoEnOrientacion(self, elemento, orientacion):
-        self.forma.ponerElementoEnOrientacion(elemento, orientacion)
+        orientacion.poner(elemento, self)
 
     def recorrer(self, func):
         func(self)
         for hijo in self.hijos:
             hijo.recorrer(func)
-        self.forma.recorrer(func)
-
-    def obtenerElementoEnOrientacion(self, orientacion):
-        return self.forma.obtenerElementoEnOrientacion(orientacion)
+        for orientacion in self.orientaciones:
+            orientacion.recorrer(func, self)
     
-    def caminarAleatorio(self, bicho):
-        self.forma.caminarAleatorio(bicho)
+    def listar_contenido(self):
+        if not self.hijos:
+            return f"El {self.__str__()} está vacío."
+        return f"{self.__str__()} contiene:\n" + "\n".join(f"  - {h.nombre}" for h in self.hijos)
 
-    def aceptar(self, unVisitor):
-        self.visitarContenedor(unVisitor)
-        for hijo in self.hijos:
-            hijo.aceptar(unVisitor)
-        self.forma.aceptar(unVisitor)
-
-
+    def coger_todo(self):
+        contenido = self.hijos[:]
+        self.hijos.clear()
+        return contenido

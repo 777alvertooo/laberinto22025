@@ -1,38 +1,16 @@
-from Orientaciones.orientacion import Orientacion
-from point import Point
+
+from .Orientacion import Orientacion
+
 class Norte(Orientacion):
-    __instance = None
-
     def __init__(self):
-        if Norte.__instance is None:
-            Norte.__instance = self
-    
-    def obtenerInstancia(self):
-        if Norte.__instance is None:
-            Norte.__instance = Norte()
-        
-        return Norte.__instance
-    
-    def getElement(self,cont):
-        return cont.norte
-    
-    def verPosicion(self,forma):
-        unPunto = (forma.punto[0],forma.punto[1]-1)
-        forma.norte.calcularPosicionDesde(forma,unPunto)
-    
-    def aceptar(self,visitor,forma):
-        print("Norte.")
-        forma.norte.aceptar(visitor)
-    
-    def putElementOn(self,em,cont):
-        cont.norte = em
-    
-    def moverA(self,ente):
-        cont = ente.posicion.form
-        cont.norte.entrar(ente)
+        super().__init__()
 
-    def getCommands(self,forma,ente):
-        return forma.norte.obtenerComandos(ente)
+    def poner(self, elemento, unContenedor):
+        unContenedor.norte = elemento
 
-    def recorrerEn(self,cont,func):
-        cont.norte.recorrer(func)
+    def recorrer(self, func, unContenedor):
+        if unContenedor.norte is not None:
+            func(unContenedor.norte)
+
+    def __str__(self):
+        return "Norte"

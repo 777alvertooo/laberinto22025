@@ -1,0 +1,76 @@
+{
+  "forma": "octogono",
+  "configuracionGlobal": {
+    "mensajeBienvenida": "Te han atrapado los enemigos en un laberinto, intenta acabar con todos para escapar..."
+  },
+  "personajePrincipal": {
+    "nombre": "Alberto",
+    "vidas": 50,
+    "poder": 10,
+    "inventario": {
+      "capacidad": 5,
+      "itemsIniciales": [
+        { "tipo": "Arma", "nombre": "Espada Inicial", "poder_adicional": 1 }
+      ]
+    },
+    "posicionInicial": {
+      "habitacionNum": 1
+    }
+  },
+  "laberinto": {
+    "descripcion": "Laberinto Mazmorra de los enemigos.",
+    "formaPredeterminada": "octogono",
+    "habitaciones": [
+      {
+        "id": "Principal", "num": 1, "nombre": "Sala Principal",
+        "descripcion": "Te acaban de atrapar en el laberinto de los enemigos. Estas en la sala principal",
+        "forma": "octogono",
+        "itemsEnHabitacion": []
+      },
+      {
+        "id": "Camara de tortura", "num": 2, "nombre": "Sala de la Camara de Tortura",
+        "descripcion": "Entras y te encuentras una camara de tortura.",
+        "forma": "octogono",
+        "itemsEnHabitacion": [
+          { "tipo": "Arma", "nombre": "Hacha Desafilada", "poder_adicional": 3 }
+        ]
+      },
+      {
+        "id": "Cámara de Vigilancia", "num": 3, "nombre": "Sala de la Camara de Tortura",
+        "descripcion": "Sientes una mirada que te observa desde una camara de vigilancia.",
+        "forma": "octogono",
+        "itemsEnHabitacion": []
+      },
+      {
+        "id": "Sala Derrumbada", "num": 4, "nombre": "Sala Derrumbada",
+        "descripcion": "Te encuentras con la sala mas antigua del laberinto. Te encuentras con unas inscripciones antiguas... y una sombra flotando.",
+        "forma": "octogono",
+        "itemsEnHabitacion": []
+      }
+    ],
+    "puertasGlobales": [
+      [1, "Norte", 2, "Sur", "PuertaNormal", {"nombre": "Puerta de Madera"}],
+      [2, "Noreste", 3, "Suroeste", "PuertaNormal", {"nombre": "Puerta de Madera"}],
+      [3, "Este", 4, "Oeste", "PuertaNormal", {"nombre": "Puerta de Madera"}]
+    ],
+    "bichos": [],
+    "fantasmas": [
+      {
+        "nombre": "Espectro Oscuro",
+        "modo": "Agresivo",
+        "posicion": 2,
+        "vidas": 30,
+        "poder": 7,
+        "drops": [
+          { "tipo": "Arma", "nombre": "Guadaña de Sombra", "poder_adicional": 5 }
+        ]
+      }
+    ],
+    "condicionVictoria": {
+      "descripcion": "Derrota a todas las criaturas del laberinto."
+    }
+  }
+}
+
+
+

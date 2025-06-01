@@ -1,39 +1,15 @@
-from Orientaciones.orientacion import Orientacion
-from point import Point
+from .Orientacion import Orientacion
 
 class Este(Orientacion):
-    __instance = None
-
     def __init__(self):
-        if Este.__instance is None:
-            Este.__instance = self
-    
-    def obtenerInstancia(self):
-        if Este.__instance is None:
-            Este.__instance = Este()
-        
-        return Este.__instance
-    
-    def getElement(self,cont):
-        return cont.este
-    
-    def verPosicion(self,forma):
-        unPunto = (forma.punto[0]+1,forma.punto[1])
-        forma.este.calcularPosicionDesde(forma,unPunto)
-    
-    def aceptar(self,visitor,forma):
-        print("Este.")
-        forma.este.aceptar(visitor)
-    
-    def putElementOn(self,em,cont):
-        cont.este = em
-    
-    def moverA(self,ente):
-        cont = ente.posicion.form
-        cont.este.entrar(ente)
+        super().__init__()
 
-    def getCommands(self,forma,ente):
-        return forma.este.obtenerComandos(ente)
+    def poner(self, elemento, unContenedor):
+        unContenedor.este = elemento
 
-    def recorrerEn(self,cont,func):
-        cont.este.recorrer(func)
+    def recorrer(self, func, unContenedor):
+        if unContenedor.este is not None:
+            func(unContenedor.este)
+
+    def __str__(self):
+        return "Este"

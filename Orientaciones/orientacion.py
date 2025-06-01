@@ -1,31 +1,17 @@
-from abc import ABC, abstractmethod
 
-class Orientacion(ABC):
+class Orientacion:
 
-    @abstractmethod
-    def getElement(self,cont):
+    def caminar(self, unBicho):
         pass
 
-    @abstractmethod
-    def putElementOn(self,em,cont):
-        pass
-    
-    @abstractmethod
-    def aceptar(self,visitor,forma):
-        pass
-    
-    @abstractmethod
-    def verPosicion(self,forma):
+    def ponerElemento(self, unEM, unContenedor):
         pass
 
-    @abstractmethod
-    def getCommands(self,forma,ente):
+    def obtenerElementoOrEn(self, unContenedor):
         pass
 
-    @abstractmethod
-    def moverA(self, ente):
+    def recorrer(self, unBloque, unContenedor):
         pass
-    
-    @abstractmethod
-    def recorrerEn(self,cont,func):
+
+    def calcularPosicionDesde(self, unaForma):
         pass

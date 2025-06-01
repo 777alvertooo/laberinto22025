@@ -1,386 +1,149 @@
-from ElementoMapa.Contenedor.laberinto import Laberinto
-from ElementoMapa.puerta import Puerta
-from ElementoMapa.Contenedor.habitacion import Habitacion
-from ElementoMapa.pared import Pared
-from Orientaciones.norte import Norte
-from Orientaciones.este import Este
-from Orientaciones.oeste import Oeste
-from Orientaciones.sur import Sur
-from ElementoMapa.Hoja.Decorator.bomba import Bomba
-from ElementoMapa.Hoja.Decorator.Fuego import Fuego
-from Ente.bicho import Bicho
-from Modo.agresivo import Agresivo
-from Modo.perezoso import Perezoso
-from Fase.comienzo import Comienzo
-from Fase.final import Final
-import threading
-import copy
+from ElementoMapa.Contenedor.Laberinto import Laberinto
+from ElementoMapa.Contenedor.Habitacion import Habitacion
+from ElementoMapa.Pared import Pared
+from ElementoMapa.Puerta import Puerta
+from Ente.Personaje import Personaje
+from ElementoMapa.Hoja.Hoja import Hoja
+from typing import Optional, Dict, List
+from Comandos.ProcesadorComandos import ProcesadorComandos
+
 
 
 class Juego:
     def __init__(self):
-        self.maze = None
-        self.prota = None
-        self.bichos = []
-        self.prototype = None
-        self.threads={}
-        self.lock = threading.Lock()
-        self.fase = Comienzo()
-        self.hasGanado = True
+        self.personaje: Optional[Personaje] = None
+        self.laberinto: Optional['Laberinto'] = None 
 
-    def getHab(self, id):
-        return self.laberinto.getHab(id)
+        self.bichos: List = [] 
+        self.configuracionGlobal: Dict = {}
         
-    def getChildrenPosition(self):
-        return self.prota.posicion.getChildren()
-    
-    def agregarPersonaje(self, ch):
-        self.fase.addCharacter(ch, self)
-
-    def puedeAgregarPersonaje(self, ch):
-        ch.juego = self
-        self.laberinto.entrar(ch)
-        self.prota = ch
-
-    def clonarLaberinto(self):
-        return copy.deepcopy(self.prototype)
-    
-    def searchAntagonist(self, ente = None):
-
-        if ente is None:
-
-            pos = self.prota.posicion
+        self._juego_terminado: bool = False
+        self.mensaje_final: str = ""
         
-            for ant in self.bichos:
 
-                if ant.posicion == pos and ant.estaVivo():
-                    return ant
+        self.procesador_comandos = ProcesadorComandos(self)
+
+        print("JUEGO: Nueva instancia de Juego creada (esperando ser poblada por el Builder).")
+
+    def agregar_personaje(self, personaje_obj: Personaje):
+        self.personaje = personaje_obj
+        if self.personaje:
+            self.personaje.juego = self 
+            print(f"JUEGO: Personaje '{self.personaje.nombre}' asignado al juego.")
         else:
-            pos = ente.posicion
+            print("JUEGO WARN: Se intentó agregar un personaje None.")
 
-            for ant in self.bichos:
-                if ant.posicion == pos and ant.estaVivo() and ant is not ente and ant.modo.esPerezoso():
-                    return ant
-        return None
-    
-    def searchCharacter(self, unBicho):
-        if unBicho.posicion == self.prota.posicion:
-            return self.prota
+
+    def agregar_bicho(self, bicho_obj):
+        if bicho_obj:
+            self.bichos.append(bicho_obj)
+            if hasattr(bicho_obj, 'juego'): 
+                bicho_obj.juego = self
+            print(f"JUEGO: Bicho '{getattr(bicho_obj, 'modo', type(bicho_obj).__name__)}' agregado al juego.")
+
+    def agregar_fantasma(self, fantasma_obj):
+        if fantasma_obj:
+            self.bichos.append(fantasma_obj)
+            if hasattr(fantasma_obj, 'juego'): 
+                fantasma_obj.juego = self
+            print(f"JUEGO: Bicho '{getattr(fantasma_obj, 'modo', type(fantasma_obj).__name__)}' agregado al juego.")
+
+    def esta_terminado(self) -> bool:
+        return self._juego_terminado
+
+    def terminar_juego(self, mensaje: str):
+        self.mensaje_final = mensaje
+        self._juego_terminado = True
+
+    def ganar_juego(self):
+        mensaje_victoria = (
+            "\n...y así, el último mecanismo cede, la gran puerta se abre, no hacia un nuevo pasaje, sino hacia la comprensión.\n"
+            "Miras hacia atrás, al laberinto de pasillos, pruebas y ecos de tus propios pasos.\n"
+            "¿Fue el laberinto una prisión física, o un reflejo de los muros internos que construimos?\n"
+            "Cada llave encontrada, cada código descifrado... meros símbolos de una búsqueda más profunda.\n"
+            "Quizás, solo quizás, la única salida era entender que nunca estuviste verdaderamente atrapado,\n"
+            "sino aprendiendo a ver más allá de las paredes que tú mismo habías aceptado.\n"
+            "Ahora, con la mente clara y el espíritu sereno, avanzas. El 'exterior' no es un lugar, sino una nueva perspectiva.\n\n"
+            "FIN"
+        )
+        self.terminar_juego(mensaje_victoria)
+
+    def perder_juego(self):
+        self.terminar_juego("La oscuridad te envuelve... Has sido derrotado, pero cada final es un nuevo comienzo para la reflexión.")
+
+    def mostrar_descripcion_habitacion_actual(self):
+        if not self.personaje or not self.personaje.posicion:
+            print("JUEGO ERROR: No se puede mostrar descripción, personaje sin posición o no existe.")
+            return
+        
+        hab_actual = self.personaje.posicion 
+        
+        print("-" * 30)
+
+        nombre_hab = getattr(hab_actual, 'nombre', f"Habitación {getattr(hab_actual, 'num', 'Desconocida')}")
+        desc_hab = getattr(hab_actual, 'descripcion', "Un lugar misterioso sin descripción aparente.")
+        print(f"Estás en: {nombre_hab}")
+        print(desc_hab)
+        
+        items_visibles = [hijo for hijo in getattr(hab_actual, 'hijos', []) if isinstance(hijo, Hoja)]
+        if items_visibles:
+            print("Ves aquí:")
+            for item_obj in items_visibles:
+                print(f"  - {item_obj.nombre}")
         else:
-            return None
+            print("No ves ningún objeto de interés inmediato.")
+
+
+        bichos_en_sala = []
+        if hasattr(self, 'bichos') and self.bichos:
+            for bicho_en_juego in self.bichos:
+                if hasattr(bicho_en_juego, 'estaVivo') and bicho_en_juego.estaVivo() and \
+                   hasattr(bicho_en_juego, 'posicion') and bicho_en_juego.posicion == hab_actual:
+                    bichos_en_sala.append(bicho_en_juego)
         
-    def muereBicho(self):
-        if self.verificarBichos() and self.hasGanado:
-            print(f"{str(self.prota)} ha derrotado a todos los bichos. ¡OLE!")
-            self.fase = Final()
-
-
-    def verificarBichos(self):
-        for ant in self.bichos:
-            if ant.estaVivo():
-                return False
-        return True
-    
-    def terminarBichos(self):
-        for bicho in self.bichos:
-            self.terminarHilo(bicho)
-    
-    def terminarHilo(self, unBicho):
-        unBicho.muere()
-
-    def personajeMuere(self):
-        print(f"{str(self.prota.seudonimo)} ha muerto. ¡HAS PERDIDO!")
-        self.hasGanado = False
-        self.terminarBichos()
-
-        self.fase = Final()
+        if bichos_en_sala:
+            print("Criaturas presentes:")
+            for bicho_obj in bichos_en_sala:
+                print(f"  - {str(bicho_obj)}") 
         
-    def openDoors(self):
-        def op(x):
-            return x.abrir() if x.esPuerta() else None
-        self.laberinto.recorrer(op)
 
-    def cerrarPuertas(self):
-        def op(x):
-            return x.cerrar() if x.esPuerta() else None
-        self.laberinto.recorrer(op)
+        posibles_nombres_orientaciones = ["norte", "sur", "este", "oeste", "noreste", "noroeste", "sureste", "suroeste"]
+
+        salidas_encontradas_info = []
+
+        for orient_str in posibles_nombres_orientaciones:
+            if hasattr(hab_actual, orient_str): 
+                elemento_en_orient = getattr(hab_actual, orient_str)
+                if isinstance(elemento_en_orient, (Puerta)):
+                    puerta_obj = elemento_en_orient
+                    
+                    nombre_puerta_especifico = getattr(puerta_obj, 'nombre', 'una puerta')
+                    hab_destino_obj = None
+                    
+                    try: 
+                        if hasattr(puerta_obj, 'lado1') and hasattr(puerta_obj, 'lado2'): 
+                            if puerta_obj.lado1 == hab_actual: 
+                                hab_destino_obj = puerta_obj.lado2
+                            elif puerta_obj.lado2 == hab_actual: 
+                                hab_destino_obj = puerta_obj.lado1
+                    except AttributeError:               
+                        print(f"JUEGO WARN: Puerta '{nombre_puerta_especifico}' en {orient_str} parece no tener lados bien definidos.")
+                    nombre_destino = "un lugar desconocido"
+                    if hab_destino_obj: 
+                        nombre_destino = getattr(hab_destino_obj, 'nombre', f"la habitación {getattr(hab_destino_obj, 'num', '?')}")
+                    salidas_encontradas_info.append(f"  - {orient_str.capitalize()}: Hacia {nombre_destino} ({nombre_puerta_especifico})")
+
+        if salidas_encontradas_info:
+            print("Salidas visibles:")
+            for info_salida in salidas_encontradas_info:
+                print(info_salida)
+        else:
+            print("No ves salidas obvias desde aquí.")
+        print("-" * 30)
     
-
-    def cerrarPuerta(self,hab1,hab2):
-        def op(x):
-            return x.cerrar() if x.esPuerta() and (x.lado1.ref is hab1 or x.lado2.ref is hab1) and (x.lado1.ref is hab2 or x.lado2.ref is hab2) else None
-        self.laberinto.recorrer(op)
-
-    def lanzarBichos(self):
-        juego = self
-        self.fase.lanzarBichos(juego)
-
-    def puedeLanzarBichos(self):
-        for bicho in self.bichos:
-            self.lanzarHilo(bicho)
-    
-    def agregarBicho(self, unBicho):
-        unBicho.juego = self
-        self.bichos.append(unBicho)
-        unBicho.numero_identificador = len(self.bichos)
-
-    def lanzarHilo(self, bicho):
-        with self.lock:  # Asegura que el acceso al diccionario es thread-safe
-            if bicho.numero_identificador not in self.threads or not self.threads[bicho.numero_identificador].is_alive():
-                # Solo crea un nuevo hilo si no hay uno activo ya para este bicho
-                th = threading.Thread(target=self.envoltura_actuar, args=(bicho,))
-                th.start()
-                self.agregarHilo(bicho, th)
-            else:
-                print(f"Ya existe un hilo activo para el bicho {bicho.numero_identificador}")
-
-    def agregarHilo(self,bicho,hilo):
-        self.threads[bicho.numero_identificador]=hilo
-
-    def envoltura_actuar(self, bicho):
-            try:
-                bicho.actuar()
-            except Exception as e:
-                print(f"Error al actuar: {e}")
-            finally:
-                with self.lock:
-                    # Limpiar el hilo terminado del diccionario
-                    if bicho.numero_identificador in self.threads:
-                        del self.threads[bicho.numero_identificador]
-    
-    def fabricarLaberinto(self):
-        return Laberinto()
-    
-    def fabricarModoAgresivo(self):
-        return Agresivo()
-    
-    def fabricarModoPerezoso(self):
-        return Perezoso()
-    
-    
-    
-    def fabricarBicho(self):
-        return Bicho()
-    
-    def fabricarBichoAgresivo(self,posicion):
-        bicho = self.fabricarBicho()
-        bicho.posicion = posicion
-        bicho.modo = self.fabricarModoAgresivo()
-
-        bicho.vidas = 10
-        bicho.poder = 3
-
-        return bicho
-    
-    def fabricarBichoPerezoso(self,posicion):
-        bicho = self.fabricarBicho()
-
-        bicho.posicion = posicion
-        bicho.modo = self.fabricarModoPerezoso()
-
-        bicho.vidas = 10
-        bicho.poder = 1
-
-        return bicho
-    
-    
-    
-    def fabricarPuerta(self):
-        return Puerta()
-
-    def fabricarHabitacion(self,num):
-        hab = Habitacion(num)
-
-        hab.putElementOn(self.fabricarNorte(), self.fabricarPared())
-        hab.putElementOn(self.fabricarEste(), self.fabricarPared())
-        hab.putElementOn(self.fabricarOeste(), self.fabricarPared())
-        hab.putElementOn(self.fabricarSur(), self.fabricarPared())
-
-        hab.addOr(self.fabricarNorte())
-        hab.addOr(self.fabricarEste())
-        hab.addOr(self.fabricarOeste())
-        hab.addOr(self.fabricarSur())
-
-        return hab
-
-    def fabricarPared(self):
-        return Pared()
-
-    def fabricarNorte(self):
-        return Norte.obtenerInstancia(self)
-    
-    def fabricarEste(self):
-        return Este.obtenerInstancia(self)
-    
-    def fabricarOeste(self):
-        return Oeste.obtenerInstancia(self)
-    
-    def fabricarSur(self):
-        return Sur.obtenerInstancia(self)
-    
-    def fabricarBomba(self):
-        return Bomba()
-    
-    def fabricarFuego(self):
-        return Fuego()
-    
-    
-    def esJuego(self):
-        return True
-
-    def labAbstractFactory(self, obj):
-        self.laberinto = self.fabricarLaberinto()
-
-        hab1 = obj.fabricarHabitacion(1)
-        hab2 = obj.fabricarHabitacion(2)
-        hab3 = obj.fabricarHabitacion(3)
-        hab4 = obj.fabricarHabitacion(4)
-
-        p1 = obj.fabricarPuerta()
-        p2 = obj.fabricarPuerta()
-        p3 = obj.fabricarPuerta()
-        p4 = obj.fabricarPuerta()
-
-        p1.lado1= hab1
-        p1.lado2= hab2
-
-        p2.lado1= hab2
-        p2.lado2= hab4
-
-        p3.lado1 = hab4
-        p3.lado2 = hab3
-
-        bomba = obj.fabricarBomba()
-        bomba.componentes = p3
-
-        p4.lado1 = hab3
-        p4.lado2 = hab1
-
-
-        otraBomba = obj.fabricarBomba()
-
-
-        # arma = obj.fabricarBatePinchos()
-
-        hab1.putElementOn(obj.fabricarEste(), p1)
-        hab1.putElementOn(obj.fabricarSur(), p4)
-
-        hab2.putElementOn(obj.fabricarOeste(), p1)
-        hab2.putElementOn(obj.fabricarSur(), p2)
-
-
-        hab3.putElementOn(obj.fabricarNorte(), p4)
-        hab3.putElementOn(obj.fabricarEste(), bomba)
-
-        hab4.putElementOn(obj.fabricarNorte(), p2)
-        hab4.putElementOn(obj.fabricarOeste(), otraBomba)
-
-        self.laberinto.agregarHabitacion(hab1)
-        self.laberinto.agregarHabitacion(hab2)
-        self.laberinto.agregarHabitacion(hab3)
-        self.laberinto.agregarHabitacion(hab4)
-
-        primerBicho = obj.fabricarBichoPerezoso(hab1)
-        segundoBicho = obj.fabricarBichoAgresivo(hab2)
-        tercerBicho = obj.fabricarBichoCurativo(hab3)
-        self.agregarBicho(primerBicho)
-        self.agregarBicho(segundoBicho)
-        self.agregarBicho(tercerBicho)
-
-    def nuevoLaberinto(self):
-        self.laberinto = self.fabricarLaberinto()
-
-        hab1 = self.fabricarHabitacion(1)
-        hab2 = self.fabricarHabitacion(2)
-        hab3 = self.fabricarHabitacion(3)
-        hab4 = self.fabricarHabitacion(4)
-
-        p1 = self.fabricarPuerta()
-        p2 = self.fabricarPuerta()
-        p3 = self.fabricarPuerta()
-        p4 = self.fabricarPuerta()
-
-        p1.lado1= hab1
-        p1.lado2= hab2
-
-        p2.lado1= hab2
-        p2.lado2= hab4
-
-        p3.lado1 = hab4
-        p3.lado2 = hab3
-
-        bomba = self.fabricarBomba()
-        bomba.componentes = p3
-
-        p4.lado1 = hab3
-        p4.lado2 = hab1
-
-
-        otraBomba = self.fabricarBomba()
-
-        # arma = self.fabricarBatePinchos()
-
-        hab1.putElementOn(self.fabricarEste(),p1)
-        hab1.putElementOn(self.fabricarSur(),p4)
-
-        hab2.putElementOn(self.fabricarOeste(),p1)
-        hab2.putElementOn(self.fabricarSur(),p2)
-
-        hab3.putElementOn(self.fabricarNorte(),p4)
-        hab3.putElementOn(self.fabricarEste(), bomba)
-
-        hab4.putElementOn(self.fabricarNorte(), p2)
-        hab4.putElementOn(self.fabricarOeste(), otraBomba)
-
-        self.laberinto.agregarHabitacion(hab1)
-        self.laberinto.agregarHabitacion(hab2)
-        self.laberinto.agregarHabitacion(hab3)
-        self.laberinto.agregarHabitacion(hab4)
-
-        bicho1 = self.fabricarBichoPerezoso(hab1)
-        bicho2 = self.fabricarBichoAgresivo(hab2)
-        bicho3 = self.fabricarBichoCurativo(hab3)
-        self.agregarBicho(bicho1)
-        self.agregarBicho(bicho2)
-        self.agregarBicho(bicho3)
-
-
-    def laberinto2HabFM(self):
-
-        self.laberinto = self.fabricarLaberinto()
-
-        hab1 = self.fabricarHabitacion(1)
-        hab2 = self.fabricarHabitacion(2)
-
-        puerta = self.fabricarPuerta()
-
-        puerta.lado1 = hab1
-        puerta.lado2 = hab2
-
-        hab1.sur = puerta
-        hab2.norte = puerta
-
-        hab1.norte= self.fabricarPared()
-        hab1.este= self.fabricarPared()
-        hab1.oeste= self.fabricarPared()
-
-        hab2.este= self.fabricarPared()
-        hab2.oeste= self.fabricarPared()
-        hab2.sur= self.fabricarPared()
-
-        self.laberinto.agregarHabitacion(hab1)
-        self.laberinto.agregarHabitacion(hab2)
-
-    def laberinto2Hab(self):
-        self.laberinto = Laberinto()
-
-        hab1 = Habitacion(1)
-        hab2 = Habitacion(2)
-
-        puerta = Puerta()
-
-        hab1.sur = puerta
-        hab2.norte = puerta
-
-        puerta.lado1 = hab1
-        puerta.lado2 = hab2
+    def verificar_condicion_victoria(self):
+        todos_muertos = all(not b.estaVivo() for b in self.bichos)
+
+        if todos_muertos and not self.esta_terminado():
+            print("\n ¡Has derrotado a todas las criaturas del laberinto!")
+            self.ganar_juego()
