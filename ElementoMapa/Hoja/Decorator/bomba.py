@@ -2,8 +2,9 @@ from ElementoMapa.Hoja.Decorator.Decorator import Decorator
 
 class Bomba(Decorator):
     
-    def __init__(self, em):
+    def __init__(self, em, daño: int = 10):
         super().__init__(em)
+        self.daño = daño
         self.activa = False
 
 

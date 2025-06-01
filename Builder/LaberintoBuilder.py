@@ -274,33 +274,49 @@ class LaberintoBuilder:
         return tunel
 
     def fabricarHoja(self, nombre_item: str, tipo_item_str: str, **props_item_dict):
+        from ElementoMapa.Hoja.Hoja import Hoja
         from ElementoMapa.Hoja.Arma import Arma
 
         item_obj = None
         tipo_item_lower = tipo_item_str.lower().strip()
 
-        # 1) Si es “Armario”, instanciamos tu clase Armario
+        # 1) Armario
         if tipo_item_lower == "armario":
             from ElementoMapa.Contenedor.Armario import Armario
             item_obj = Armario(nombre_item)
 
-        # 2) Si es “Baul” o “Baúl”, instanciamos tu clase Baul
+        # 2) Baúl
         elif tipo_item_lower in ("baul", "baúl"):
             from ElementoMapa.Contenedor.Baul import Baul
             item_obj = Baul(nombre_item)
 
-        # 3) Si es “Arma”, usamos la clase Arma
+        # 3) Arma
         elif tipo_item_lower == "arma" and Arma:
-            item_obj = Arma(nombre=nombre_item,
-                            poder_adicional=props_item_dict.get("poder_adicional", 1))
+            item_obj = Arma(
+                nombre=nombre_item,
+                poder_adicional=props_item_dict.get("poder_adicional", 1)
+            )
 
-        # 4) Si es “HojaGenérica”, creamos Hoja
+        elif tipo_item_lower == "bomba":
+            from ElementoMapa.Hoja.Decorator.Bomba import Bomba
+            daño = props_item_dict.get("daño", 10)
+            base = Hoja(nombre_item)
+            item_obj = Bomba(base, daño)
+
+        elif tipo_item_lower == "fuego":
+            from ElementoMapa.Hoja.Decorator.Fuego import Fuego
+            daño = props_item_dict.get("daño", 5)
+            base = Hoja(nombre_item)
+            item_obj = Fuego(base, daño)
+
+
+        # 6) Hoja genérica (caso “hojagenerica”)
         elif tipo_item_lower == "hojagenerica":
             item_obj = Hoja(nombre=nombre_item)
             if "descripcion" in props_item_dict:
                 setattr(item_obj, "descripcion", props_item_dict["descripcion"])
 
-        # 5) Si no coincide con nada de lo anterior, Hoja genérica
+        # 7) Cualquier otro caso → Hoja genérica
         else:
             print(f"BUILDER WARN: Tipo de ítem '{tipo_item_str}' desconocido. Creando Hoja genérica para '{nombre_item}'.")
             item_obj = Hoja(nombre=nombre_item)
@@ -308,6 +324,7 @@ class LaberintoBuilder:
         if item_obj:
             print(f"BUILDER: Fabricado ítem '{nombre_item}' de tipo '{tipo_item_str}'.")
         return item_obj
+
 
 
     
