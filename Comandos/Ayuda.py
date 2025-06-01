@@ -50,6 +50,7 @@ class Ayuda(Comando):
         ayuda_texto += "  abrir norte\n"
         ayuda_texto += "  soltar palo de madera\n"
         ayuda_texto += "  ayuda (o ?)\n"
+        ayuda_texto += "  revisar <nombre del baul o armario>\n"
         ayuda_texto += "  salir (para terminar el juego)\n"
         
         return ayuda_texto.strip()
